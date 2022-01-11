@@ -1,6 +1,8 @@
 package dtu.group2.Application;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import dtu.ws.fastmoney.Account;
 import dtu.ws.fastmoney.BankService;
@@ -12,6 +14,10 @@ public class AccountServiceServer {
 
 	BankService bank = new BankServiceService().getBankServicePort();
 	
+	
+	List<Account> accounts = new ArrayList<>();
+
+
 	public AccountServiceServer() { }
 
 

@@ -47,5 +47,6 @@ Feature: Account
 ## Unknown result
 #		Then the exception "Account with accountID abc does not exist" is received
 #
-
-
+# Mock Message queue
+# Receive message queue messages
+# Keep users in mem
