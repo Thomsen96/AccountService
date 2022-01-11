@@ -2,35 +2,35 @@ Feature: Account
 
 # Create
 	Scenario: Successfully create a bank account
-		Given a user with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
-		And the user have a balance of "420"
+		Given a customer with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
+		And the customer have a balance of "420"
 		When the bank creates an account with an accountID
-		Then an account exists with that accountID
+		Then a customer account exists with that accountID
 		
-	Scenario: Create an account for an empty user
+	Scenario: Create an account for an empty customer
 		Given a user with no first name, last name or cpr number
-		And the user have a balance of "0"
+		And the customer have a balance of "0"
 		When the bank creates an account with an accountID
 		Then A "Missing CPR number" exception is raised
 
-	Scenario: Create an account with invalid balance
-		Given a user with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
-		And the user have a balance of "HejMedDig"
+	Scenario: Create an account with invalid balance for customer
+		Given a customer with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
+		And the customer have a balance of "HejMedDig"
 		When the bank creates an account with an accountID
 		Then A "Character H is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark." exception is raised
 		
 # Delete
 	Scenario: Successfully delete an account
-		Given a user with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
-		And the user have a balance of "420"
+		Given a customer with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
+		And the customer have a balance of "420"
 		When the bank creates an account with an accountID
-		And the account is deleted
-		And the account is fetched
+		And the customer account is deleted
+		And the customer account is fetched
 		Then A "Account does not exist" exception is raised
 
 	Scenario: Delete account that does not exist
 		Given account ID "abc"
-		When the account is deleted
+		When the customer account is deleted
 		Then A "Account does not exist" exception is raised
 		
 

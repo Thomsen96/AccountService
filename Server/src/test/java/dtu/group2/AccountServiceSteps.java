@@ -28,7 +28,7 @@ public class AccountServiceSteps {
 
   
   @After
-  public void cleanUsersAfterRun() throws BankServiceException_Exception {
+  public void cleanUsersAfterRun() {
 	  try {
 		  bank.retireAccount(accountID);
 	  } catch (Exception e){
@@ -37,7 +37,7 @@ public class AccountServiceSteps {
   }
   
   
-  @Given("a user with first name {string}, last name {string} and cpr number {string}")
+  @Given("a customer with first name {string}, last name {string} and cpr number {string}")
   public void aUserWithFirstNameLastNameAndCprNumber(String firstName, String lastName, String cprNumber) {
 	  user = new User();
       user.setFirstName(firstName);
@@ -45,7 +45,7 @@ public class AccountServiceSteps {
 	  user.setCprNumber(cprNumber);
   }
 
-  @Given("the user have a balance of {string}")
+  @Given("the customer have a balance of {string}")
   public void theUserHaveABalanceOf(String balance) {
       this.balance = balance;
   }
@@ -53,16 +53,16 @@ public class AccountServiceSteps {
   @When("the bank creates an account with an accountID")
   public void theBankCreatesAnAccountWithAnAccountID() throws BankServiceException_Exception {
       try {
-    	  this.accountID = ass.CreateAccount(user, new BigDecimal(balance));
+    	  this.accountID = ass.CreateCustomer(user, new BigDecimal(balance));
       } catch (Exception e) {
     	  exception = e;
       }
   }
 
-  @Then("an account exists with that accountID")
+  @Then("a customer account exists with that accountID")
   public void anAccountExistsWithThatAccountID() throws BankServiceException_Exception {
-	  assertNotNull( ass.GetAccount(accountID) );		  
-	  assertEquals( ass.GetAccount(accountID).getId(), accountID );
+	  assertNotNull( ass.GetCustomer(accountID) );
+	  assertEquals( ass.GetCustomer(accountID).getId(), accountID );
   }
 
   @Given("a user with no first name, last name or cpr number")
@@ -75,19 +75,19 @@ public class AccountServiceSteps {
       assertEquals(expectedException, this.exception.getMessage());
   }
 
-  @When("the account is deleted")
+  @When("the customer account is deleted")
   public void theAccountWithAccountIDIsDeleted() {
 	  try {
-		  ass.DeleteAccount(accountID);
+		  ass.DeleteCustomer(accountID);
 	  } catch (Exception e) {
 		  this.exception = e;
 	  }
   }
 
-  @When("the account is fetched")
+  @When("the customer account is fetched")
   public void theAccountIsFetched() {
       try {
-    	  ass.GetAccount(accountID);
+    	  ass.GetCustomer(accountID);
       } catch (Exception e) {
     	  this.exception = e;
       }
