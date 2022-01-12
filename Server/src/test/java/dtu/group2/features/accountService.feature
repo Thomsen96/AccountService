@@ -34,7 +34,7 @@ Feature: Account
 		Then A "Account does not exist" exception is raised
 		
 
-# Update
+# Update - There are no endpoints to update accounts in the bank
 #	Scenario: Successfully update an account id
 #		Given an account with accountID "abc" exists in the database
 #		When the account is updated with id "cba"
@@ -50,3 +50,6 @@ Feature: Account
 # Mock Message queue
 # Receive message queue messages
 # Keep users in mem
+
+
+
