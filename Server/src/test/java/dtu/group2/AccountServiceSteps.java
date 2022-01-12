@@ -8,6 +8,7 @@ import dtu.group2.Application.AccountServiceServer;
 import dtu.group2.Presentation.Resources.AccountMessageService;
 import dtu.ws.fastmoney.*;
 import io.cucumber.java.After;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,6 +16,7 @@ import messaging.Event;
 import messaging.MessageQueue;
 import messaging.implementations.RabbitMqQueue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class AccountServiceSteps {
 
@@ -107,9 +109,19 @@ public class AccountServiceSteps {
 		mq.publish(event);
     }
 
-    @Then("a messagequeue message with an account is in the queue")
-    public void aMessagequeueMessageWithAnAccountIsInTheQueue() {
-
+    @Then("a uid is received and customer returned")
+    public void aUidIsReceived() throws BankServiceException_Exception {
+//        messageService.getCustomer(new Event("getCustomer", new Object[] { ass.GetCustomer(accountID) } ));
+//        mq.publish(new Event("GetCustomer", new Object[] { ass.GetCustomer(accountID) } ));
     }
 
+    @When("a request is received")
+    public void aRequestIsReceived() throws BankServiceException_Exception {
+        Event e = new Event("GetCustomer", new Object[] { accountID } );
+        messageService.handleGetCustomer(e);
+        String id = e.getArgument(0, String.class);
+        Account customer = ass.GetCustomer(id);
+        Event event = new Event("Customer", new Object[]{customer});
+        verify(mq).publish(event);
+    }
 }

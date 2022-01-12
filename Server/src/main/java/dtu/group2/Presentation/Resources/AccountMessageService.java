@@ -18,20 +18,37 @@ public class AccountMessageService {
     public AccountMessageService(MessageQueue messageQueue, AccountServiceServer ass){
         this.messageQueue = messageQueue;
         this.accountServiceServer = ass;
+        this.messageQueue.addHandler("GetCustomer", this::handleGetCustomer);
     }
 
-    // Send
-    public Account sendCustomer(Account customer){
-        accountPending = new CompletableFuture<>();
-        Event event = new Event("getCustomer", new Object[] {customer});
-        messageQueue.publish(event);
-        return accountPending.join();
-    }
+//    public void addEvent(Event e){
+//        this.messageQueue.publish(e);
+//    }
 
-    // Recieve
-    public void getCustomer(Event e) throws BankServiceException_Exception {
-       String id = e.getArgument(0, String.class);
-       Account customer = accountServiceServer.GetCustomer(id);
-       messageQueue.publish(new Event("Customer", new Object[] {customer} ));
+    public void handleGetCustomer(Event e) {
+        try {
+            String id = e.getArgument(0, String.class);
+            Account customer = accountServiceServer.GetCustomer(id);
+            Event event = new Event("Customer", new Object[]{customer});
+            messageQueue.publish(event);
+        } catch(Exception ex){
+
+        }
     }
+//
+//    // Send
+//    public Account sendCustomer(Account customer){
+//        accountPending = new CompletableFuture<>();
+//        Event event = new Event("getCustomer", new Object[] {customer});
+//        messageQueue.publish(event);
+//        return accountPending.join();
+//    }
+//
+//    // Recieve
+//    public void getCustomer(Event e) throws BankServiceException_Exception {
+//       String id = e.getArgument(0, String.class);
+//       Account customer = accountServiceServer.GetCustomer(id);
+//       messageQueue.publish(new Event("Customer", new Object[] {customer} ));
+//    }
+
 }

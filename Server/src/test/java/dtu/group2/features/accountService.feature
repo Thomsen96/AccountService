@@ -32,30 +32,19 @@ Feature: Account
 		Given account ID "abc"
 		When the customer account is deleted
 		Then A "Account does not exist" exception is raised
-		
-
-# Update - There are no endpoints to update accounts in the bank
-#	Scenario: Successfully update an account id
-#		Given an account with accountID "abc" exists in the database
-#		When the account is updated with id "cba"
-#		Then an account exists with that accountID
-#		And the account with accountID "abc" does not exist
-#		
-#	Scenario: Successfully update an account id of non existing account
-#		Given an account with accountID "abc" does not exist
-#		When the account is updated with id "cba"
-## Unknown result
-#		Then the exception "Account with accountID abc does not exist" is received
-#
-# Mock Message queue
-# Receive message queue messages
-# Keep users in mem
 
 	Scenario: Test messagequeue
 		Given a customer with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
 		And the customer have a balance of "420"
 		When the bank creates an account with an accountID
 		Then a messagequeue message is produced
-		And a messagequeue message with an account is in the queue
+
+	Scenario: Test receive message
+		Given a customer with first name "JohnsonSon", last name "McJohnsonSon" and cpr number "6669991-69691"
+		And the customer have a balance of "42011"
+		When the bank creates an account with an accountID
+		When a request is received
+		Then a uid is received and customer returned
+
 
 
