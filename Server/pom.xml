@@ -73,6 +73,11 @@
       <artifactId>amqp-client</artifactId>
       <version>5.14.0</version>
     </dependency>
+    <dependency>
+      <groupId>hubert.dtu.dk</groupId>
+      <artifactId>messaging-utilities</artifactId>
+      <version>3.2</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
