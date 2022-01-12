@@ -17,8 +17,8 @@ public class AccountServiceServer {
 	
 	BankService bank = new BankServiceService().getBankServicePort();
 
-	private HashMap<String,Account> merchants = new HashMap<>();
-	private HashMap<String,Account> customers = new HashMap<>();
+	private static HashMap<String,Account> merchants = new HashMap<>();
+	private static HashMap<String,Account> customers = new HashMap<>();
 	
 	// Create queue 
 	private Channel channel;
