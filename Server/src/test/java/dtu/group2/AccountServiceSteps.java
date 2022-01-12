@@ -23,13 +23,11 @@ public class AccountServiceSteps {
     User user;
     String balance;
     String accountID;
-
     Exception exception;
 
     private static AccountServiceServer ass = new AccountServiceServer();
     MessageQueue mq = mock(RabbitMqQueue.class);
     AccountMessageService messageService = new AccountMessageService(mq, ass);
-
     BankService bank = new BankServiceService().getBankServicePort();
 
     @After
@@ -41,7 +39,7 @@ public class AccountServiceSteps {
         }
     }
 
-    @Given("a customer with first name {string}, last name {string} and cpr number {string} and balance of {string}")
+    @Given("a user with first name {string}, last name {string} and cpr number {string} and balance of {string}")
     public void aCustomerWithFirstNameLastNameAndCprNumberAndBalanceOf(String firstName, String lastName, String cprNumber, String balance) {
         user = new User();
         user.setFirstName(firstName);
@@ -61,7 +59,7 @@ public class AccountServiceSteps {
     }
 
     @Then("a customer account exists with that accountID")
-    public void anAccountExistsWithThatAccountID() throws BankServiceException_Exception {
+    public void anAccountExistsWithThatAccountID() {
         assertNotNull(ass.GetCustomer(accountID));
         assertEquals(ass.GetCustomer(accountID).getId(), accountID);
     }
@@ -71,9 +69,9 @@ public class AccountServiceSteps {
         user = new User();
     }
 
-    @Then("A {string} exception is raised")
-    public void aExceptionIsRaised(String expectedException) {
-        assertEquals(expectedException, this.exception.getMessage());
+    @Then("the customer no longer exists")
+    public void theCustomerNoLongerExists() {
+        assertNull(ass.GetCustomer(accountID));
     }
 
     @When("the customer account is deleted")
@@ -94,7 +92,6 @@ public class AccountServiceSteps {
     public void accountID(String accountId) {
         this.accountID = accountId;
     }
-
     
     @Then("a messagequeue message is produced")
     public void aMessagequeueMessageIsProduced() {	
@@ -103,13 +100,13 @@ public class AccountServiceSteps {
     }
 
     @When("a request is received")
-    public void aRequestIsReceived() throws BankServiceException_Exception {
+    public void aRequestIsReceived() {
         Event e = new Event("GetCustomer", new Object[] { accountID } );
         messageService.handleGetCustomer(e);
     }
 
     @Then("a uid is received and customer returned")
-    public void aUidIsReceived() throws BankServiceException_Exception {
+    public void aUidIsReceived() {
         Account customer = ass.GetCustomer(accountID);
         Event event = new Event("ResponseCustomer", new Object[]{customer});
         verify(mq).publish(event);
@@ -127,6 +124,14 @@ public class AccountServiceSteps {
         verify(mq).publish(e);
     }
 
+    @When("a merchant tries to create an account")
+    public void aMerchantTriesToCreateAnAccount() throws BankServiceException_Exception {
+        ass.CreateMerchant(accountID);
+    }
 
-
+    @Then("a uid is received and merchant returned")
+    public void aUidIsReceivedAndMerchantReturned() {
+        assertNotNull(ass.GetMerchant(accountID));
+        assertEquals(ass.GetMerchant(accountID).getId(), accountID);
+    }
 }

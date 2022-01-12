@@ -27,21 +27,12 @@ public class AccountServiceServer {
 		return uid;
 	}
 
-
-	public Account GetCustomer(String accountID) throws BankServiceException_Exception {
-		if(customers.get(accountID) != null) {
-			return customers.get(accountID);
-		} else {
-			throw new BankServiceException_Exception("Account does not exist", new BankServiceException());
-		}
+	public Account GetCustomer(String accountID) {
+		return customers.get(accountID);
 	}
 
-	public Account GetMerchant(String accountID) throws BankServiceException_Exception {
-		if(merchants.get(accountID) != null) {
-			return merchants.get(accountID);
-		} else {
-			throw new BankServiceException_Exception("Account does not exist", new BankServiceException());
-		}
+	public Account GetMerchant(String accountID) {
+		return merchants.get(accountID);
 	}
 
 	public void DeleteCustomer(String accountID) {
