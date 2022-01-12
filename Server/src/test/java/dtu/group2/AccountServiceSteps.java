@@ -15,6 +15,8 @@ import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import messaging.MessageQueue;
+import messaging.implementations.RabbitMqQueue;
 
 public class AccountServiceSteps {
  
@@ -25,6 +27,8 @@ public class AccountServiceSteps {
   Exception exception;
   
   AccountServiceServer ass = new AccountServiceServer(); 
+  
+  MessageQueue queue = new RabbitMqQueue();
   
   BankService bank = new BankServiceService().getBankServicePort();
 
@@ -102,8 +106,7 @@ public class AccountServiceSteps {
   
   @Given("a messagequeue produces the message {string}")
   public void aMessagequeueProducesTheMessage(String string) throws UnsupportedEncodingException, IOException {
-	  MockRabbitMq mq = new MockRabbitMq();
-	  mq.PublishMsg(string);
+
   }
   
 }
