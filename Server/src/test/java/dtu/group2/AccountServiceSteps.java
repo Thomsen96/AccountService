@@ -7,16 +7,15 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 
 import dtu.group2.Application.AccountServiceServer;
-import dtu.ws.fastmoney.BankService;
-import dtu.ws.fastmoney.BankServiceException_Exception;
-import dtu.ws.fastmoney.BankServiceService;
-import dtu.ws.fastmoney.User;
+import dtu.group2.Presentation.Resources.AccountMessageService;
+import dtu.ws.fastmoney.*;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import messaging.MessageQueue;
 import messaging.implementations.RabbitMqQueue;
+import static org.mockito.Mockito.mock;
 
 public class AccountServiceSteps {
  
@@ -25,10 +24,12 @@ public class AccountServiceSteps {
   String accountID;
   
   Exception exception;
-  
-  AccountServiceServer ass = new AccountServiceServer(); 
-  
-  MessageQueue queue = new RabbitMqQueue();
+
+
+
+  AccountServiceServer ass = new AccountServiceServer();
+    MessageQueue mq = mock(RabbitMqQueue.class);
+  AccountMessageService messageService = new AccountMessageService(mq,ass);
   
   BankService bank = new BankServiceService().getBankServicePort();
 
@@ -104,9 +105,18 @@ public class AccountServiceSteps {
       this.accountID = accountId;
   }
   
-  @Given("a messagequeue produces the message {string}")
-  public void aMessagequeueProducesTheMessage(String string) throws UnsupportedEncodingException, IOException {
+//  @Given("a messagequeue produces the message {string}")
+//  public void aMessagequeueProducesTheMessage(String string) throws UnsupportedEncodingException, IOException {
+//
+//  }
+//
+//    @Then("reads a new message {string}")
+//    public void readsANewMessage(String arg0) {
+//
+//    }
 
-  }
-  
+    @Then("sends the account to the queue")
+    public void sendsTheAccountToTheQueue() throws BankServiceException_Exception {
+        messageService.sendCustomer(ass.GetCustomer(accountID));
+    }
 }

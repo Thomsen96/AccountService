@@ -51,6 +51,11 @@ Feature: Account
 # Receive message queue messages
 # Keep users in mem
 	Scenario: Test messagequeue
-		Given a messagequeue produces the message "test"
+		Given a customer with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
+		And the customer have a balance of "420"
+		When the bank creates an account with an accountID
+		Then sends the account to the queue
+#		Given a messagequeue produces the message "test"
+#		Then reads a new message "getCustomer"
 
 
