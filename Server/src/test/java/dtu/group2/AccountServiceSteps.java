@@ -122,7 +122,7 @@ public class AccountServiceSteps {
     @Then("a uid is received and customer returned")
     public void aUidIsReceived() throws BankServiceException_Exception {
         Account customer = ass.GetCustomer(accountID);
-        Event event = new Event("Customer", new Object[]{customer});
+        Event event = new Event("ResponseCustomer", new Object[]{customer});
         verify(mq).publish(event);
     }
 }
