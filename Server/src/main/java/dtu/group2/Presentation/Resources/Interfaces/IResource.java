@@ -4,8 +4,6 @@ import dtu.group2.Domain.Entities.Interfaces.IEntity;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
-import java.util.HashMap;
 
 public interface IResource<T extends IEntity> {
     Response get(@QueryParam("id") String id);

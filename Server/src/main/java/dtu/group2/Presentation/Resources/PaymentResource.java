@@ -14,11 +14,8 @@ import dtu.group2.Infrastructure.Repositories.LocalCustomerIRepository;
 import dtu.group2.Infrastructure.Repositories.LocalMerchantIRepository;
 import dtu.group2.Infrastructure.Repositories.LocalPaymentRepository;
 import dtu.group2.Presentation.Resources.Interfaces.IResource;
-import dtu.ws.fastmoney.BankService;
-import dtu.ws.fastmoney.BankServiceService;
 
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
 
 @Path("/payments")
 public class PaymentResource implements IResource<Payment> {

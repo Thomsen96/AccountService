@@ -50,6 +50,7 @@ Feature: Account
 # Mock Message queue
 # Receive message queue messages
 # Keep users in mem
-
+	Scenario: Test messagequeue
+		Given a messagequeue produces the message "test"
 
 

@@ -1,42 +1,54 @@
 package dtu.group2.Application;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import dtu.group2.Infrastructure.Repositories.LocalCustomerIRepository;
-import dtu.group2.Infrastructure.Repositories.LocalMerchantIRepository;
 import dtu.ws.fastmoney.*;
 
-import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 
-
 public class AccountServiceServer {
 
+	private static final String EXCHANGE_NAME = "pub-sub-queue";
+	private static final String ROUTING_KEY = "account.*";
+	
 	BankService bank = new BankServiceService().getBankServicePort();
 
 	private HashMap<String,Account> merchants = new HashMap<>();
 	private HashMap<String,Account> customers = new HashMap<>();
 	
 	// Create queue 
-	private Channel msgQueue;
+	private Channel channel;
 	
 	public void SetMessageQueue(Channel queue) {
-		msgQueue = queue;
+		channel = queue;
 	}
 	
 	
-	public AccountServiceServer() throws Exception {
-//		ConnectionFactory mqFactory = new ConnectionFactory();
-//		mqFactory.setHost("rabbitmq.server.dtu.dk");
-//		Connection connection = mqFactory.newConnection();
-//		msgQueue = connection.createChannel();
+	public AccountServiceServer() {
+		try {
+			ConnectionFactory mqFactory = new ConnectionFactory();
+			mqFactory.setHost("localhost");
+			Connection connection = mqFactory.newConnection();
+
+			channel = connection.createChannel();
+			channel.exchangeDeclare(EXCHANGE_NAME, "topic");
+	        String queueName = channel.queueDeclare().getQueue();
+	        channel.queueBind(queueName, EXCHANGE_NAME, ROUTING_KEY);
+
+	        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+	            String message = new String(delivery.getBody(), "UTF-8");
+	            System.out.println("Received: " + message);
+	        };
+	        
+	        channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String CreateCustomer(User user, BigDecimal balance) throws BankServiceException_Exception {

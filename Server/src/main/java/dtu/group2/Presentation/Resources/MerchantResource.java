@@ -1,14 +1,14 @@
 package dtu.group2.Presentation.Resources;
 
-import dtu.group2.Domain.Entities.Customer;
 import dtu.group2.Domain.Entities.Merchant;
-import dtu.group2.Domain.Entities.Payment;
+// import dtu.group2.Domain.Entities.Customer;
+// import dtu.group2.Domain.Entities.Payment;
 import dtu.group2.Infrastructure.Repositories.Exceptions.ArgumentNullException;
 import dtu.group2.Infrastructure.Repositories.Exceptions.EntityNotFoundException;
 import dtu.group2.Infrastructure.Repositories.Interfaces.IRepository;
-import dtu.group2.Infrastructure.Repositories.LocalCustomerIRepository;
 import dtu.group2.Infrastructure.Repositories.LocalMerchantIRepository;
-import dtu.group2.Infrastructure.Repositories.LocalPaymentRepository;
+// import dtu.group2.Infrastructure.Repositories.LocalCustomerIRepository;
+// import dtu.group2.Infrastructure.Repositories.LocalPaymentRepository;
 import dtu.group2.Presentation.Resources.Interfaces.IResource;
 
 import javax.ws.rs.*;
@@ -18,9 +18,9 @@ import javax.ws.rs.core.Response;
 @Path("/merchants")
 public class MerchantResource implements IResource<Merchant> {
 
-    private final IRepository<Customer> customerRepository = new LocalCustomerIRepository();
     private final IRepository<Merchant> merchantRepository = new LocalMerchantIRepository();
-    private final IRepository<Payment> paymentRepository = new LocalPaymentRepository();
+    // private final IRepository<Customer> customerRepository = new LocalCustomerIRepository();
+    // private final IRepository<Payment> paymentRepository = new LocalPaymentRepository();
 
 
 

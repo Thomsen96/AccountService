@@ -2,6 +2,8 @@ package dtu.group2;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 
 import dtu.group2.Application.AccountServiceServer;
@@ -96,6 +98,12 @@ public class AccountServiceSteps {
   @Given("account ID {string}")
   public void accountID(String accountId) {
       this.accountID = accountId;
+  }
+  
+  @Given("a messagequeue produces the message {string}")
+  public void aMessagequeueProducesTheMessage(String string) throws UnsupportedEncodingException, IOException {
+	  MockRabbitMq mq = new MockRabbitMq();
+	  mq.PublishMsg(string);
   }
   
 }
