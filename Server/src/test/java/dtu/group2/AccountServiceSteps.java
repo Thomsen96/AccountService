@@ -8,7 +8,6 @@ import dtu.group2.Application.AccountServiceServer;
 import dtu.group2.Presentation.Resources.AccountMessageService;
 import dtu.ws.fastmoney.*;
 import io.cucumber.java.After;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -55,13 +54,13 @@ public class AccountServiceSteps {
 
     @When("a customer tries to create an account")
     public void aCustomerTriesToCreateAnAccount() throws BankServiceException_Exception {
-        ass.CreateCustomer(accountID);
+        ass.createCustomer(accountID);
     }
 
     @Then("a customer account exists with that accountID")
     public void anAccountExistsWithThatAccountID() {
-        assertNotNull(ass.GetCustomer(accountID));
-        assertEquals(ass.GetCustomer(accountID).getId(), accountID);
+        assertNotNull(ass.getCustomer(accountID));
+        assertEquals(ass.getCustomer(accountID).getId(), accountID);
     }
 
     @Given("a user with no first name, last name or cpr number")
@@ -71,18 +70,18 @@ public class AccountServiceSteps {
 
     @Then("the customer no longer exists")
     public void theCustomerNoLongerExists() {
-        assertNull(ass.GetCustomer(accountID));
+        assertNull(ass.getCustomer(accountID));
     }
 
     @When("the customer account is deleted")
     public void theAccountWithAccountIDIsDeleted() {
-        ass.DeleteCustomer(accountID);
+        ass.deleteCustomer(accountID);
     }
 
     @When("the customer account is fetched")
     public void theAccountIsFetched() {
         try {
-            ass.GetCustomer(accountID);
+            ass.getCustomer(accountID);
         } catch (Exception e) {
             this.exception = e;
         }
@@ -107,7 +106,7 @@ public class AccountServiceSteps {
 
     @Then("a uid is received and customer returned")
     public void aUidIsReceived() {
-        Account customer = ass.GetCustomer(accountID);
+        Account customer = ass.getCustomer(accountID);
         Event event = new Event("ResponseCustomer", new Object[]{customer});
         verify(mq).publish(event);
     }
@@ -126,12 +125,12 @@ public class AccountServiceSteps {
 
     @When("a merchant tries to create an account")
     public void aMerchantTriesToCreateAnAccount() throws BankServiceException_Exception {
-        ass.CreateMerchant(accountID);
+        ass.createMerchant(accountID);
     }
 
     @Then("a uid is received and merchant returned")
     public void aUidIsReceivedAndMerchantReturned() {
-        assertNotNull(ass.GetMerchant(accountID));
-        assertEquals(ass.GetMerchant(accountID).getId(), accountID);
+        assertNotNull(ass.getMerchant(accountID));
+        assertEquals(ass.getMerchant(accountID).getId(), accountID);
     }
 }

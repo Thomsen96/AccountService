@@ -17,29 +17,29 @@ public class AccountServiceServer {
 
 	}
 
-	public String CreateCustomer(String uid) throws BankServiceException_Exception {
+	public String createCustomer(String uid) throws BankServiceException_Exception {
 		customers.put(uid, bank.getAccount(uid));
 		return uid;
 	}
 
-	public String CreateMerchant(String uid) throws BankServiceException_Exception {
+	public String createMerchant(String uid) throws BankServiceException_Exception {
 		merchants.put(uid, bank.getAccount(uid));
 		return uid;
 	}
 
-	public Account GetCustomer(String accountID) {
+	public Account getCustomer(String accountID) {
 		return customers.get(accountID);
 	}
 
-	public Account GetMerchant(String accountID) {
+	public Account getMerchant(String accountID) {
 		return merchants.get(accountID);
 	}
 
-	public void DeleteCustomer(String accountID) {
+	public void deleteCustomer(String accountID) {
 		customers.remove(accountID);
 	}
 
-	public void DeleteMerchant(String accountID) throws BankServiceException_Exception {
+	public void deleteMerchant(String accountID) throws BankServiceException_Exception {
 		bank.retireAccount(accountID);
 		merchants.remove(accountID);
 	}
@@ -47,5 +47,4 @@ public class AccountServiceServer {
 	public boolean verifyCustomer(String accountID){
 		return customers.get(accountID) != null;
 	}
-
 }

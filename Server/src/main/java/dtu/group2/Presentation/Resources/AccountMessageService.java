@@ -2,7 +2,6 @@ package dtu.group2.Presentation.Resources;
 
 import dtu.group2.Application.AccountServiceServer;
 import dtu.ws.fastmoney.Account;
-import dtu.ws.fastmoney.BankServiceException_Exception;
 import messaging.Event;
 import messaging.MessageQueue;
 
@@ -31,7 +30,7 @@ public class AccountMessageService {
     public void handleGetCustomer(Event e) {
         try {
             String id = e.getArgument(0, String.class);
-            Account customer = accountServiceServer.GetCustomer(id);
+            Account customer = accountServiceServer.getCustomer(id);
             Event event = new Event("ResponseCustomer", new Object[]{customer});
             messageQueue.publish(event);
         } catch(Exception ex){
