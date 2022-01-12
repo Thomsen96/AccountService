@@ -109,18 +109,19 @@ public class AccountServiceSteps {
 		mq.publish(event);
     }
 
-    @Then("a uid is received and customer returned")
-    public void aUidIsReceived() throws BankServiceException_Exception {
-//        messageService.getCustomer(new Event("getCustomer", new Object[] { ass.GetCustomer(accountID) } ));
-//        mq.publish(new Event("GetCustomer", new Object[] { ass.GetCustomer(accountID) } ));
-    }
-
     @When("a request is received")
     public void aRequestIsReceived() throws BankServiceException_Exception {
+        //Verify(mq)
         Event e = new Event("GetCustomer", new Object[] { accountID } );
         messageService.handleGetCustomer(e);
-        String id = e.getArgument(0, String.class);
-        Account customer = ass.GetCustomer(id);
+
+        //publish(event)
+
+    }
+
+    @Then("a uid is received and customer returned")
+    public void aUidIsReceived() throws BankServiceException_Exception {
+        Account customer = ass.GetCustomer(accountID);
         Event event = new Event("Customer", new Object[]{customer});
         verify(mq).publish(event);
     }
