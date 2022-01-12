@@ -9,13 +9,15 @@ import messaging.MessageQueue;
 import java.util.concurrent.CompletableFuture;
 
 public class AccountMessageService {
+	
     private MessageQueue messageQueue;
+    
     private CompletableFuture<Account> accountPending;
     private AccountServiceServer accountServiceServer;
 
     public AccountMessageService(MessageQueue messageQueue, AccountServiceServer ass){
         this.messageQueue = messageQueue;
-        this. accountServiceServer = ass;
+        this.accountServiceServer = ass;
     }
 
     // Send

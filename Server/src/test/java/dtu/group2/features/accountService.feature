@@ -2,7 +2,7 @@ Feature: Account
 
 # Create
 	Scenario: Successfully create a bank account
-		Given a customer with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
+		Given a customer with first name "Johnson1", last name "McJohnson1" and cpr number "666999-69691"
 		And the customer have a balance of "420"
 		When the bank creates an account with an accountID
 		Then a customer account exists with that accountID
@@ -50,12 +50,12 @@ Feature: Account
 # Mock Message queue
 # Receive message queue messages
 # Keep users in mem
+
 	Scenario: Test messagequeue
 		Given a customer with first name "Johnson", last name "McJohnson" and cpr number "666999-6969"
 		And the customer have a balance of "420"
 		When the bank creates an account with an accountID
-		Then sends the account to the queue
-#		Given a messagequeue produces the message "test"
-#		Then reads a new message "getCustomer"
+		Then a messagequeue message is produced
+		And a messagequeue message with an account is in the queue
 
 
