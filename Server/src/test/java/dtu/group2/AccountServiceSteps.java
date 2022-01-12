@@ -41,26 +41,23 @@ public class AccountServiceSteps {
         }
     }
 
-    @Given("a customer with first name {string}, last name {string} and cpr number {string}")
-    public void aUserWithFirstNameLastNameAndCprNumber(String firstName, String lastName, String cprNumber) {
+    @Given("a customer with first name {string}, last name {string} and cpr number {string} and balance of {string}")
+    public void aCustomerWithFirstNameLastNameAndCprNumberAndBalanceOf(String firstName, String lastName, String cprNumber, String balance) {
         user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setCprNumber(cprNumber);
-    }
-
-    @Given("the customer have a balance of {string}")
-    public void theUserHaveABalanceOf(String balance) {
         this.balance = balance;
-    }
-
-    @When("the bank creates an account with an accountID")
-    public void theBankCreatesAnAccountWithAnAccountID() throws BankServiceException_Exception {
         try {
-            this.accountID = ass.CreateCustomer(user, new BigDecimal(balance));
+            this.accountID = bank.createAccountWithBalance(user, new BigDecimal(balance));
         } catch (Exception e) {
             exception = e;
         }
+    }
+
+    @When("a customer tries to create an account")
+    public void aCustomerTriesToCreateAnAccount() throws BankServiceException_Exception {
+        ass.CreateCustomer(accountID);
     }
 
     @Then("a customer account exists with that accountID")
@@ -81,11 +78,7 @@ public class AccountServiceSteps {
 
     @When("the customer account is deleted")
     public void theAccountWithAccountIDIsDeleted() {
-        try {
-            ass.DeleteCustomer(accountID);
-        } catch (Exception e) {
-            this.exception = e;
-        }
+        ass.DeleteCustomer(accountID);
     }
 
     @When("the customer account is fetched")
@@ -133,6 +126,7 @@ public class AccountServiceSteps {
         Event e = new Event("CustomerVerified", new Object[] { ass.verifyCustomer(accountID) } );
         verify(mq).publish(e);
     }
+
 
 
 }

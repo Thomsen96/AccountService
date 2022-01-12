@@ -17,14 +17,12 @@ public class AccountServiceServer {
 
 	}
 
-	public String CreateCustomer(User user, BigDecimal balance) throws BankServiceException_Exception {
-		String uid = bank.createAccountWithBalance(user, balance);
+	public String CreateCustomer(String uid) throws BankServiceException_Exception {
 		customers.put(uid, bank.getAccount(uid));
 		return uid;
 	}
 
-	public String CreateMerchant(User user, BigDecimal balance) throws BankServiceException_Exception {
-		String uid = bank.createAccountWithBalance(user, balance);
+	public String CreateMerchant(String uid) throws BankServiceException_Exception {
 		merchants.put(uid, bank.getAccount(uid));
 		return uid;
 	}
@@ -46,16 +44,8 @@ public class AccountServiceServer {
 		}
 	}
 
-	public void DeleteCustomer(String accountID) throws BankServiceException_Exception {
-		try {
-			bank.retireAccount(accountID);
-		}
-		catch(Exception e){
-			throw e;
-		}
-		finally {
-			customers.remove(accountID);
-		}
+	public void DeleteCustomer(String accountID) {
+		customers.remove(accountID);
 	}
 
 	public void DeleteMerchant(String accountID) throws BankServiceException_Exception {
