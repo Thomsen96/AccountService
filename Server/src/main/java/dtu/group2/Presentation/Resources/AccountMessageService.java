@@ -19,6 +19,13 @@ public class AccountMessageService {
         this.messageQueue = messageQueue;
         this.accountServiceServer = ass;
         this.messageQueue.addHandler("GetCustomer", this::handleGetCustomer);
+        this.messageQueue.addHandler("CustomerVerificationRequested", this::handleVerifyCustomer);
+    }
+
+    public void handleVerifyCustomer(Event event) {
+        String id = event.getArgument(0, String.class);
+        Event respEvent = new Event("CustomerVerified", new Object[] { accountServiceServer.verifyCustomer(id) } );
+        messageQueue.publish(respEvent);
     }
 
     public void handleGetCustomer(Event e) {

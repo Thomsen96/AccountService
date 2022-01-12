@@ -111,12 +111,8 @@ public class AccountServiceSteps {
 
     @When("a request is received")
     public void aRequestIsReceived() throws BankServiceException_Exception {
-        //Verify(mq)
         Event e = new Event("GetCustomer", new Object[] { accountID } );
         messageService.handleGetCustomer(e);
-
-        //publish(event)
-
     }
 
     @Then("a uid is received and customer returned")
@@ -125,4 +121,18 @@ public class AccountServiceSteps {
         Event event = new Event("ResponseCustomer", new Object[]{customer});
         verify(mq).publish(event);
     }
+
+    @When("a request is received for verification")
+    public void aRequestIsReceivedForVerification() {
+        Event e = new Event("CustomerVerificationRequested", new Object[]{ accountID });
+        messageService.handleVerifyCustomer(e);
+    }
+
+    @Then("a uid is received and verification of the custumer is returned")
+    public void aUidIsReceivedAndVerificationOfTheCustumerIsReturned() {
+        Event e = new Event("CustomerVerified", new Object[] { ass.verifyCustomer(accountID) } );
+        verify(mq).publish(e);
+    }
+
+
 }

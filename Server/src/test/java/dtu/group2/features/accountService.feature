@@ -39,12 +39,19 @@ Feature: Account
 		When the bank creates an account with an accountID
 		Then a messagequeue message is produced
 
-	Scenario: Test receive message
+	Scenario: getCustomer request
 		Given a customer with first name "JohnsonSon", last name "McJohnsonSon" and cpr number "6669991-69691"
 		And the customer have a balance of "42011"
 		When the bank creates an account with an accountID
 		When a request is received
 		Then a uid is received and customer returned
+
+	Scenario: VerifyToken request
+		Given a customer with first name "JohnsonSon", last name "McJohnsonSon" and cpr number "6669991-69691"
+		And the customer have a balance of "42011"
+		When the bank creates an account with an accountID
+		When a request is received for verification
+		Then a uid is received and verification of the custumer is returned
 
 
 

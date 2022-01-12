@@ -63,4 +63,8 @@ public class AccountServiceServer {
 		merchants.remove(accountID);
 	}
 
+	public boolean verifyCustomer(String accountID){
+		return customers.get(accountID) != null;
+	}
+
 }
