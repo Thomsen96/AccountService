@@ -19,13 +19,13 @@ pipeline {
 //                 sh './deploy.sh'
             }
         }
-        stage('Test') {
-            steps {
-                sh "chmod +x -R ${env.WORKSPACE}"
-                sh'./test.sh'
-                //sleep 2
-            }
-        }
+//         stage('Test') {
+//             steps {
+//                 sh "chmod +x -R ${env.WORKSPACE}"
+//                 sh'./test.sh'
+//                 //sleep 2
+//             }
+//         }
     }
     post {
         always {
