@@ -8,6 +8,7 @@ import dtu.group2.Application.AccountServiceServer;
 import dtu.group2.Presentation.Resources.AccountMessageService;
 import dtu.ws.fastmoney.*;
 import io.cucumber.java.After;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -58,9 +59,15 @@ public class AccountServiceSteps {
     }
 
     @Then("a customer account exists with that accountID")
-    public void anAccountExistsWithThatAccountID() {
+    public void aCustomerAccountExistsWithThatAccountID() {
         assertNotNull(ass.getCustomer(accountID));
         assertEquals(ass.getCustomer(accountID).getId(), accountID);
+    }
+
+    @Then("a merchant account exists with that accountID")
+    public void aMerchantAccountExistsWithThatAccountID() {
+        assertNotNull(ass.getMerchant(accountID));
+        assertEquals(ass.getMerchant(accountID).getId(), accountID);
     }
 
     @Given("a user with no first name, last name or cpr number")
@@ -76,6 +83,16 @@ public class AccountServiceSteps {
     @When("the customer account is deleted")
     public void theAccountWithAccountIDIsDeleted() {
         ass.deleteCustomer(accountID);
+    }
+
+    @And("the merchant account is deleted")
+    public void theMerchantAccountIsDeleted() {
+        ass.deleteMerchant(accountID);
+    }
+
+    @Then("the merchant no longer exists")
+    public void theMerchantNoLongerExists() {
+        assertNull(ass.getMerchant(accountID));
     }
 
     @When("the customer account is fetched")

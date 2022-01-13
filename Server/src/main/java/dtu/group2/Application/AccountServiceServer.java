@@ -39,8 +39,7 @@ public class AccountServiceServer {
 		customers.remove(accountID);
 	}
 
-	public void deleteMerchant(String accountID) throws BankServiceException_Exception {
-		bank.retireAccount(accountID);
+	public void deleteMerchant(String accountID) {
 		merchants.remove(accountID);
 	}
 

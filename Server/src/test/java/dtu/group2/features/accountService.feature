@@ -6,12 +6,23 @@ Feature: Account
 		When a customer tries to create an account
 		Then a customer account exists with that accountID
 
+	Scenario: Successfully create a merchant account
+		Given a user with first name "Johnson1", last name "McJohnson1" and cpr number "666999-69691" and balance of "420"
+		When a merchant tries to create an account
+		Then a merchant account exists with that accountID
+
 # Delete
-	Scenario: Successfully delete an account
+	Scenario: Successfully delete a customer account
 		Given a user with first name "Johnson1", last name "McJohnson1" and cpr number "666999-69691" and balance of "420"
 		When a customer tries to create an account
 		And the customer account is deleted
 		Then the customer no longer exists
+
+	Scenario: Successfully delete a merchant account
+		Given a user with first name "Johnson1", last name "McJohnson1" and cpr number "666999-69691" and balance of "420"
+		When a merchant tries to create an account
+		And the merchant account is deleted
+		Then the merchant no longer exists
 
 	Scenario: Delete account that does not exist
 		Given account ID "abc"
