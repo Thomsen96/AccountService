@@ -5,7 +5,7 @@ FROM adoptopenjdk:11-jre-hotspot
 COPY target/lib /usr/src/lib
 COPY target/account-service-1.0.0-runner.jar /usr/src/
 WORKDIR /usr/src/
-CMD java -Dquarkus.http.port=8183 -Xmx64m -jar account-service-1.0.0-runner.jar
+CMD java -Dquarkus.http.port=8182 -Xmx64m -jar account-service-1.0.0-runner.jar
 
 #FROM adoptopenjdk:11-jre-hotspot
 #COPY target/lib /usr/src/lib

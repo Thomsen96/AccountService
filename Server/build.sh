@@ -1,4 +1,5 @@
 #!/bin/bash
 set -e
 mvn clean package
-docker-compose build account-service-server
+
+docker build . -t account-service
