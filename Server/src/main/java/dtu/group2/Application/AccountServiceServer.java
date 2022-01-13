@@ -23,7 +23,7 @@ public class AccountServiceServer {
 	}
 
 	public String createMerchant(String uid) throws BankServiceException_Exception {
-		merchants.put(uid, bank.getAccount(uid));
+		merchants.put(uid, bank.getAccount(uid)); 
 		return uid;
 	}
 
