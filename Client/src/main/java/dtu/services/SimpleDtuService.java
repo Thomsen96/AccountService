@@ -26,23 +26,6 @@ public class SimpleDtuService {
   public Response pay(int amount, String cid, String mid) {
     var payment = new Payment(amount, cid, mid);
 
-    //System.out.println(res.getStatus());
-    return client
-        .target(HTTP_CHOSEN_HOST_AND_PORT)
-        .path("payments")
-        .request(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .post(Entity.json(payment));
-  }
-
-  public Response getPayments() {
-    return client.target(HTTP_CHOSEN_HOST_AND_PORT)
-            .path("payments")
-            .request(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .get();
-  }
-
   public Response createCustomer(String id, String balance) {
     return client
             .target(HTTP_CHOSEN_HOST_AND_PORT)
