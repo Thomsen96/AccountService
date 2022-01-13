@@ -10,13 +10,14 @@ public class SimpleDtuService {
 
   public static final String HTTP_LOCALHOST_8080 = "http://localhost:8080";
   public static final String HTTP_DOCKER_LOCALHOST_8181 = "http://dtu_server_cont:8181";
+  public static final String HTTP_DOCKER_LOCALHOST_8183 = "http://dtu_server_cont:8183";
   public static String HTTP_CHOSEN_HOST_AND_PORT = HTTP_LOCALHOST_8080;
   private final Client client = ClientBuilder.newClient();
 
   public SimpleDtuService(){
     // For CI in jenkins, we need to provide a Docker specific host:port combination
     if ("True".equals(System.getenv("IN_DOCKER_ENV"))){
-      HTTP_CHOSEN_HOST_AND_PORT = HTTP_DOCKER_LOCALHOST_8181;
+      HTTP_CHOSEN_HOST_AND_PORT = HTTP_DOCKER_LOCALHOST_8183;
       System.out.println("Running in a Dockerfile has been detected. Changed the host and port.");
     }
 
