@@ -1,5 +1,5 @@
-## run the docker conatiner with the command bwlow. where the entry point especialy is important.
-#docker run --name dtu_client_cont --network=deploy_app_network --entrypoint /home/app/run.sh dtupay_client:latest
+## run the docker container with the command below. where the entry point especially is important.
+#docker run --name tokenservice_client --network=deploy_app_network --entrypoint /home/app/run.sh tokenservice_client:latest
 
 FROM maven:3.8.4-jdk-11-slim
 ENV IN_DOCKER_ENV=True
@@ -14,5 +14,3 @@ RUN echo "#!/bin/bash \n mvn --no-transfer-progress -f /home/app/pom.xml test" >
 
 ## Make scripte executeable
 RUN chmod +x /home/app/run.sh
-
-

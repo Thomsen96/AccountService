@@ -4,43 +4,34 @@ pipeline {
     stages {
         stage('Setup server') {
             steps {
-                sh 'docker rm -f dtu_server_cont'
-                sh 'docker rm -f dtu_client_cont'
+                sh 'docker rm -f account-service-server'
             }
         }
-        stage('Build server') {
+        stage('Build') {
             steps {
-                sh 'docker build --tag dtupay ./Server'
-            }
-        }
-        stage('Build client') {
-            steps {
-                sh 'docker build --tag dtupay_client ./Client'
-            }
-        }
-        stage('Start Server') {
-            steps {
-                echo 'starting up dtupay docker'
-                sh'docker run --name dtu_server_cont --network=deploy_app_network -d dtupay:latest'
-                //sleep 2
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'starting up test'
-                sh 'docker run --name dtu_client_cont --network=deploy_app_network --entrypoint /home/app/run.sh dtupay_client:latest'
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './build.sh'
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying....'
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh './deploy.sh'
             }
         }
-        stage('Clean up') {
+        stage('Test') {
             steps {
-                sh 'docker rm -f dtu_server_cont'
-                sh 'docker rm -f dtu_client_cont'
+                sh "chmod +x -R ${env.WORKSPACE}"
+                sh'./test.sh'
+                //sleep 2
             }
+        }
+    }
+    post {
+        always {
+            sh 'echo "pipeline complete"'
+            sh "chmod +x -R ${env.WORKSPACE}"
+             sh './stop.sh'
         }
     }
 }
