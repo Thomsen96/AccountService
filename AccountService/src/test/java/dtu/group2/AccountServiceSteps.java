@@ -138,7 +138,7 @@ public class AccountServiceSteps {
 
     @Then("a uid is received and verification of the custumer is returned")
     public void aUidIsReceivedAndVerificationOfTheCustumerIsReturned() {
-        Event e = new Event("CustomerVerified", new Object[] { ass.verifyCustomer(accountID) } );
+        Event e = new Event("CustomerVerificationRequest", new Object[] { ass.verifyCustomer(accountID) } );
         verify(mq).publish(e);
     }
 

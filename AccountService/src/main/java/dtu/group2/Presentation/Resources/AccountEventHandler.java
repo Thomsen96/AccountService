@@ -33,6 +33,7 @@ public class AccountEventHandler {
         this.messageQueue.addHandler("CustomerCreationRequested", this::createCustomerAccountRequest);
         this.messageQueue.addHandler("MerchantCreationRequested", this::createMerchantAccountRequest);
 
+
     }
 
     private void handleGetMerchant(Event event) {
@@ -76,13 +77,13 @@ public class AccountEventHandler {
 
     public void handleCustomerVerificationRequest(Event event)  {
         String id = event.getArgument(0, String.class);
-        Event response = new Event("CustomerVerificationRequest", new Object[] { accountService.verifyCustomer(id) } );
+        Event response = new Event("CustomerVerificationResponse", new Object[] { accountService.verifyCustomer(id) } );
         messageQueue.publish(response);
     }
 
     public void handleMerchantVerificationRequest(Event event) {
         String id = event.getArgument(0, String.class);
-        Event response = new Event("MerchantVerificationRequest", new Object[] { accountService.verifyMerchant(id) } );
+        Event response = new Event("MerchantVerificationResponse", new Object[] { accountService.verifyMerchant(id) } );
         messageQueue.publish(response);
     }
 
@@ -96,5 +97,4 @@ public class AccountEventHandler {
 
         }
     }
-
 }
