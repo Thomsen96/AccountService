@@ -6,25 +6,27 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import dtu.group2.Application.AccountService;
+import dtu.group2.Domain.Entities.CustomerCreationRequest;
 import dtu.group2.Repositories.CustomerRepository;
 import dtu.group2.Repositories.MerchantRepository;
 import dtu.ws.fastmoney.BankServiceException_Exception;
 
 
-@Path("/account")
+@Path("/customers")
 public class Rest {
 	
 	private static AccountService service = new AccountService(new CustomerRepository(), new MerchantRepository());
 
 	@POST
-	@Path("/customer/{customerId}")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response create(@PathParam("customerId") String customerId) {
+	public Response create(CustomerCreationRequest CreationRequest) {
 		try {
-			return Response.status(Response.Status.CREATED).entity(service.createCustomer(customerId)).build();
+			service.createCustomer(CreationRequest.getAccountNumber());
+			return Response.status(Response.Status.OK).entity(CreationRequest).build();
 		} catch (BankServiceException_Exception e) {
 			e.printStackTrace();
-			return Response.status(Response.Status.CREATED).entity(false).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 	}
 

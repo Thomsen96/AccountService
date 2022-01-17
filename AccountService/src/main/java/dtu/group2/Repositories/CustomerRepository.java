@@ -25,8 +25,7 @@ public class CustomerRepository implements IAccountRepository {
 
     @Override
     public void create(String id, Account account) throws BankServiceException_Exception {
-        customers.put(id, bank.getAccount(id));
-//        return uid;
+        customers.put(id, account);
     }
 
     @Override
