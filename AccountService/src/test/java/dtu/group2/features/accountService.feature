@@ -46,11 +46,11 @@ Feature: Account
 		When a request is received
 		Then a uid is received and merchant returned
 
-#	Scenario: VerifyToken request
-#		Given a user with first name "Johnson1", last name "McJohnson1" and cpr number "666999-69691" and balance of "420"
-#		When a customer tries to create an account
-#		When a request is received for verification
-#		Then a uid is received and verification of the custumer is returned
+	Scenario: VerifyToken request
+		Given a user with first name "Johnson1", last name "McJohnson1" and cpr number "666999-69691" and balance of "420"
+		When a customer tries to create an account
+		When a request is received for verification
+		Then a uid is received and verification of the custumer is returned
 
 
 

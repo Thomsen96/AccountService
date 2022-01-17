@@ -27,9 +27,6 @@ public class AccountEventHandler {
         this.messageQueue.addHandler("CustomerVerificationRequested", this::handleCustomerVerificationRequest);
         this.messageQueue.addHandler("MerchantVerificationRequested", this::handleMerchantVerificationRequest);
 
-        this.messageQueue.addHandler("CustomerVerificationRequested", this::handleCustomerVerificationRequest);
-        this.messageQueue.addHandler("CustomerVerificationRequested", this::handleCustomerVerificationRequest);
-
         this.messageQueue.addHandler("CustomerCreationRequested", this::createCustomerAccountRequest);
         this.messageQueue.addHandler("MerchantCreationRequested", this::createMerchantAccountRequest);
 
