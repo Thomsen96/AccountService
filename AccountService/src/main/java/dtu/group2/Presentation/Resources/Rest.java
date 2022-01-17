@@ -6,13 +6,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import dtu.group2.Application.AccountServiceServer;
+import dtu.group2.Repositories.CustomerRepository;
+import dtu.group2.Repositories.MerchantRepository;
 import dtu.ws.fastmoney.BankServiceException_Exception;
 
 
 @Path("/account")
 public class Rest {
 	
-	private static AccountServiceServer service = new AccountServiceServer();
+	private static AccountServiceServer service = new AccountServiceServer(new CustomerRepository(), new MerchantRepository());
 
 	@POST
 	@Path("/customer/{customerId}")

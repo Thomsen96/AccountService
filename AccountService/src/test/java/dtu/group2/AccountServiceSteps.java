@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 import dtu.group2.Application.AccountServiceServer;
 import dtu.group2.Presentation.Resources.AccountMessageService;
+import dtu.group2.Repositories.CustomerRepository;
+import dtu.group2.Repositories.MerchantRepository;
 import dtu.ws.fastmoney.*;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
@@ -25,7 +27,7 @@ public class AccountServiceSteps {
     String accountID;
     Exception exception;
 
-    private static AccountServiceServer ass = new AccountServiceServer();
+    private static AccountServiceServer ass = new AccountServiceServer(new CustomerRepository(), new MerchantRepository());
     MessageQueue mq = mock(RabbitMqQueue.class);
     AccountMessageService messageService = new AccountMessageService(mq, ass);
     BankService bank = new BankServiceService().getBankServicePort();
