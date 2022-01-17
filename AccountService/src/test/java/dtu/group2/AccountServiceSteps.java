@@ -3,12 +3,10 @@ package dtu.group2;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
-import java.util.concurrent.CompletableFuture;
 
 import dtu.group2.Application.AccountService;
 import dtu.group2.Presentation.Resources.AccountEventHandler;
-import dtu.group2.Repositories.CustomerRepository;
-import dtu.group2.Repositories.MerchantRepository;
+import dtu.group2.Repositories.AccountRepository;
 import dtu.ws.fastmoney.*;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
@@ -32,7 +30,7 @@ public class AccountServiceSteps {
 
 //    private CompletableFuture<String> statusMessage = new CompletableFuture<>();
 
-    private static AccountService accountService = new AccountService(new CustomerRepository(), new MerchantRepository());
+    private static AccountService accountService = new AccountService(new AccountRepository(), new AccountRepository());
     MessageQueue mq = mock(RabbitMqQueue.class);
     AccountEventHandler messageService = new AccountEventHandler(mq, accountService);
     BankService bank = new BankServiceService().getBankServicePort();

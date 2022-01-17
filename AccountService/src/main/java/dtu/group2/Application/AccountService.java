@@ -1,9 +1,4 @@
 package dtu.group2.Application;
-
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.UUID;
-
 import dtu.group2.Interfaces.IAccountRepository;
 import dtu.ws.fastmoney.*;
 
@@ -14,25 +9,17 @@ public class AccountService {
 	private IAccountRepository customers;
 	private IAccountRepository merchants;
 
-//	private static HashMap<String,Account> merchants = new HashMap<>();
-//	private static HashMap<String,Account> customers = new HashMap<>();
-	
-	
 	public AccountService(IAccountRepository customers, IAccountRepository merchants) {
 		this.customers = customers;
 		this.merchants = merchants;
 	}
 
 	public String createCustomer(String id) throws BankServiceException_Exception {
-		String customerId = UUID.randomUUID().toString();
-		customers.create(customerId, bank.getAccount(id));
-		return customerId;
+		return customers.create(bank.getAccount(id));
 	}
 
 	public String createMerchant(String id) throws BankServiceException_Exception {
-		String merchantId = UUID.randomUUID().toString();
-		merchants.create(merchantId, bank.getAccount(id));
-		return merchantId;
+		return merchants.create(bank.getAccount(id));
 	}
 
 	public Account getCustomer(String accountId) {

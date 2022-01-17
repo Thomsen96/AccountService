@@ -5,6 +5,7 @@ import dtu.ws.fastmoney.BankService;
 import dtu.ws.fastmoney.BankServiceException_Exception;
 import dtu.ws.fastmoney.BankServiceService;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public interface IAccountRepository {
@@ -15,6 +16,7 @@ public interface IAccountRepository {
     Account getAccount(String id);
 //    String getAccountId(String id);
     void delete(String id);
-    void create(String userId, Account account) throws BankServiceException_Exception;
+    String create(Account account);
     Boolean verify(String id);
+    Collection<Account> getAll();
 }
