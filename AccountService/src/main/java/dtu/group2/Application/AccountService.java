@@ -2,6 +2,7 @@ package dtu.group2.Application;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.UUID;
 
 import dtu.group2.Interfaces.IAccountRepository;
 import dtu.ws.fastmoney.*;
@@ -22,22 +23,32 @@ public class AccountService {
 		this.merchants = merchants;
 	}
 
-	public String createCustomer(String uid) throws BankServiceException_Exception {
-		customers.create(uid, bank.getAccount(uid));
-		return uid;
+	public String createCustomer(String id) throws BankServiceException_Exception {
+		String customerId = UUID.randomUUID().toString();
+		customers.create(id, customerId, bank.getAccount(id));
+		return id;
 	}
 
 	public String createMerchant(String id) throws BankServiceException_Exception {
-		merchants.create(id, bank.getAccount(id));
+		String merchantId = UUID.randomUUID().toString();
+		merchants.create(id, merchantId, bank.getAccount(id));
 		return id;
 	}
 
 	public Account getCustomer(String id) {
-		return customers.get(id);
+		return customers.getAccount(id);
 	}
 
 	public Account getMerchant(String id) {
-		return merchants.get(id);
+		return merchants.getAccount(id);
+	}
+
+	public String getCustomerId(String customerId) {
+		return customers.getAccountId(customerId);
+	}
+
+	public String getMerchantId(String merchantId) {
+		return merchants.getAccountId(merchantId);
 	}
 
 	public void deleteCustomer(String id) {

@@ -33,8 +33,12 @@ public class AccountEventHandler {
         this.messageQueue.addHandler("CustomerCreationRequested", this::createCustomerAccountRequest);
         this.messageQueue.addHandler("MerchantCreationRequested", this::createMerchantAccountRequest);
 
-
+        this.messageQueue.addHandler("MerchantIdToAccountNumberRequest", this::handleMerchantIdToAccountNumberRequest);
+        this.messageQueue.addHandler("CustomerIdToAccountNumberRequest", this::handleCustomerIdToAccountNumberRequest);
     }
+
+
+
 
     private void handleGetMerchant(Event event) {
     }
@@ -96,5 +100,27 @@ public class AccountEventHandler {
         } catch(Exception ex){
 
         }
+    }
+
+    private void handleMerchantIdToAccountNumberRequest(Event event) {
+        String id = event.getArgument(0, String.class);
+        String sessionId = event.getArgument(1, String.class);
+        String merchantAccountId = accountService.getMerchantId(id);
+        Event response = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{merchantAccountId});
+        if(merchantAccountId == null){
+            response = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{"No merchant exists with the provided id"});
+        }
+        messageQueue.publish(response);
+    }
+
+    private void handleCustomerIdToAccountNumberRequest(Event event) {
+        String id = event.getArgument(0, String.class);
+        String sessionId = event.getArgument(1, String.class);
+        String customerAccountId = accountService.getCustomerId(id);
+        Event response = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{customerAccountId});
+        if(customerAccountId == null){
+            response = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{"No customer exists with the provided id"});
+        }
+        messageQueue.publish(response);
     }
 }

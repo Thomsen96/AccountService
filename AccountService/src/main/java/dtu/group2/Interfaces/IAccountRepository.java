@@ -9,10 +9,12 @@ import java.util.HashMap;
 
 public interface IAccountRepository {
     final HashMap<String,Account> user = null;
+    final HashMap<String,String> id = null;
     BankService bank = null;
 
-    Account get(String id);
+    Account getAccount(String id);
+    String getAccountId(String id);
     void delete(String id);
-    void create(String id, Account account) throws BankServiceException_Exception;
+    void create(String accountId, String userId, Account account) throws BankServiceException_Exception;
     Boolean verify(String id);
 }

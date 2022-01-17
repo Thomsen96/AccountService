@@ -9,26 +9,33 @@ import dtu.ws.fastmoney.BankServiceService;
 import java.util.HashMap;
 
 public class MerchantRepository implements IAccountRepository {
-    private static final HashMap<String, Account> merchants = new HashMap<>();
+    private static final HashMap<String, Account> merchantsAccounts = new HashMap<>();
+    private static final HashMap<String, String> merchantsIds = new HashMap<>();
     BankService bank = new BankServiceService().getBankServicePort();
 
     @Override
-    public Account get(String id) {
-        return merchants.get(id);
+    public Account getAccount(String id) {
+        return merchantsAccounts.get(id);
+    }
+
+    @Override
+    public String getAccountId(String id) {
+        return merchantsIds.get(id);
     }
 
     @Override
     public void delete(String id) {
-        merchants.remove(id);
+        merchantsAccounts.remove(id);
     }
 
     @Override
-    public void create(String id, Account account) throws BankServiceException_Exception {
-        merchants.put(id, account);
+    public void create(String accountId, String merchantId, Account account) throws BankServiceException_Exception {
+        merchantsAccounts.put(accountId, account);
+        merchantsIds.put(merchantId, accountId);
     }
 
     @Override
     public Boolean verify(String id) {
-        return merchants.get(id) != null;
+        return merchantsAccounts.get(id) != null;
     }
 }
