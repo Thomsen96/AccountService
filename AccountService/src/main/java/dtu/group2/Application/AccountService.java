@@ -6,7 +6,7 @@ import java.util.HashMap;
 import dtu.group2.Interfaces.IAccountRepository;
 import dtu.ws.fastmoney.*;
 
-public class AccountServiceServer {
+public class AccountService {
 	
 	BankService bank = new BankServiceService().getBankServicePort();
 
@@ -17,7 +17,7 @@ public class AccountServiceServer {
 //	private static HashMap<String,Account> customers = new HashMap<>();
 	
 	
-	public AccountServiceServer(IAccountRepository customers, IAccountRepository merchants) {
+	public AccountService(IAccountRepository customers, IAccountRepository merchants) {
 		this.customers = customers;
 		this.merchants = merchants;
 	}
@@ -27,28 +27,32 @@ public class AccountServiceServer {
 		return uid;
 	}
 
-	public String createMerchant(String uid) throws BankServiceException_Exception {
-		merchants.create(uid, bank.getAccount(uid));
-		return uid;
+	public String createMerchant(String id) throws BankServiceException_Exception {
+		merchants.create(id, bank.getAccount(id));
+		return id;
 	}
 
-	public Account getCustomer(String accountID) {
-		return customers.get(accountID);
+	public Account getCustomer(String id) {
+		return customers.get(id);
 	}
 
-	public Account getMerchant(String accountID) {
-		return merchants.get(accountID);
+	public Account getMerchant(String id) {
+		return merchants.get(id);
 	}
 
-	public void deleteCustomer(String accountID) {
-		customers.delete(accountID);
+	public void deleteCustomer(String id) {
+		customers.delete(id);
 	}
 
-	public void deleteMerchant(String accountID) {
-		merchants.delete(accountID);
+	public void deleteMerchant(String id) {
+		merchants.delete(id);
 	}
 
-	public boolean verifyCustomer(String accountID){
-		return customers.verify(accountID);
+	public boolean verifyCustomer(String id){
+		return customers.verify(id);
+	}
+
+	public boolean verifyMerchant(String id){
+		return merchants.verify(id);
 	}
 }

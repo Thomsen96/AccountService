@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 
-import dtu.group2.Application.AccountServiceServer;
-import dtu.group2.Presentation.Resources.AccountMessageService;
+import dtu.group2.Application.AccountService;
+import dtu.group2.Presentation.Resources.AccountEventHandler;
 import dtu.group2.Repositories.CustomerRepository;
 import dtu.group2.Repositories.MerchantRepository;
 import dtu.ws.fastmoney.*;
@@ -27,9 +27,9 @@ public class AccountServiceSteps {
     String accountID;
     Exception exception;
 
-    private static AccountServiceServer ass = new AccountServiceServer(new CustomerRepository(), new MerchantRepository());
+    private static AccountService ass = new AccountService(new CustomerRepository(), new MerchantRepository());
     MessageQueue mq = mock(RabbitMqQueue.class);
-    AccountMessageService messageService = new AccountMessageService(mq, ass);
+    AccountEventHandler messageService = new AccountEventHandler(mq, ass);
     BankService bank = new BankServiceService().getBankServicePort();
 
     @After
@@ -133,7 +133,7 @@ public class AccountServiceSteps {
     @When("a request is received for verification")
     public void aRequestIsReceivedForVerification() {
         Event e = new Event("CustomerVerificationRequested", new Object[]{ accountID });
-        messageService.handleVerifyCustomer(e);
+        messageService.handleCustomerVerificationRequest(e);
     }
 
     @Then("a uid is received and verification of the custumer is returned")
