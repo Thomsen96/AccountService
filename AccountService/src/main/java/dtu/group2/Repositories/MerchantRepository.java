@@ -21,8 +21,7 @@ public class MerchantRepository implements IAccountRepository {
 
     @Override
     public void create(String id, Account account) throws BankServiceException_Exception {
-        assert false;
-        merchants.put(id, bank.getAccount(id));
+        merchants.put(id, account);
     }
 
     @Override
