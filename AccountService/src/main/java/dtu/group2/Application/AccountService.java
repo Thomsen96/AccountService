@@ -26,21 +26,21 @@ public class AccountService {
 	public String createCustomer(String id) throws BankServiceException_Exception {
 		String customerId = UUID.randomUUID().toString();
 		customers.create(id, customerId, bank.getAccount(id));
-		return id;
+		return customerId;
 	}
 
 	public String createMerchant(String id) throws BankServiceException_Exception {
 		String merchantId = UUID.randomUUID().toString();
 		merchants.create(id, merchantId, bank.getAccount(id));
-		return id;
+		return merchantId;
 	}
 
-	public Account getCustomer(String id) {
-		return customers.getAccount(id);
+	public Account getCustomer(String accountId) {
+		return customers.getAccount(accountId);
 	}
 
-	public Account getMerchant(String id) {
-		return merchants.getAccount(id);
+	public Account getMerchant(String accountId) {
+		return merchants.getAccount(accountId);
 	}
 
 	public String getCustomerId(String customerId) {

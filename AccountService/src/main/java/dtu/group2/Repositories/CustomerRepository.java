@@ -11,6 +11,7 @@ public class CustomerRepository implements IAccountRepository {
 
     private static final HashMap<String, Account> customersAccounts = new HashMap<>();
     private static final HashMap<String, String> customersIds = new HashMap<>();
+
     BankService bank = new BankServiceService().getBankServicePort();
 
     @Override
