@@ -55,4 +55,8 @@ public class AccountService {
 	public boolean verifyMerchant(String id){
 		return merchants.verify(id);
 	}
+
+	public Object getStatus() {
+		return "Sanitity check for account service";
+	}
 }

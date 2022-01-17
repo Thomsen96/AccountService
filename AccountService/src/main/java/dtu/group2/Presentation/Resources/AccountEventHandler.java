@@ -19,6 +19,8 @@ public class AccountEventHandler {
         this.messageQueue = messageQueue;
         this.accountService = ass;
 
+        this.messageQueue.addHandler("AccountStatusResponse", this::handleAccountStatusRequest);
+
         this.messageQueue.addHandler("GetCustomer", this::handleGetCustomer);
         this.messageQueue.addHandler("GetMerchant", this::handleGetMerchant);
 
@@ -30,10 +32,16 @@ public class AccountEventHandler {
 
         this.messageQueue.addHandler("CustomerCreationRequested", this::createCustomerAccountRequest);
         this.messageQueue.addHandler("MerchantCreationRequested", this::createMerchantAccountRequest);
-        
+
     }
 
     private void handleGetMerchant(Event event) {
+    }
+
+    public void handleAccountStatusRequest(Event e) {
+        System.out.println("Received a request to send back to status the service");
+        Event event = new Event("AccountStatusResponse", new Object[] {accountService.getStatus()});
+        messageQueue.publish(event);
     }
 
     public void createCustomerAccountRequest(Event event) {
