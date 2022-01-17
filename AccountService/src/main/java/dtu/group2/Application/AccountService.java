@@ -25,13 +25,13 @@ public class AccountService {
 
 	public String createCustomer(String id) throws BankServiceException_Exception {
 		String customerId = UUID.randomUUID().toString();
-		customers.create(id, customerId, bank.getAccount(id));
+		customers.create(customerId, bank.getAccount(id));
 		return customerId;
 	}
 
 	public String createMerchant(String id) throws BankServiceException_Exception {
 		String merchantId = UUID.randomUUID().toString();
-		merchants.create(id, merchantId, bank.getAccount(id));
+		merchants.create(merchantId, bank.getAccount(id));
 		return merchantId;
 	}
 
@@ -44,11 +44,17 @@ public class AccountService {
 	}
 
 	public String getCustomerId(String customerId) {
-		return customers.getAccountId(customerId);
+		Account customerAccount = customers.getAccount(customerId);
+		if(customerAccount != null) return customerAccount.getId();
+		else return "Couldn't find customer";
+//		return customers.getAccount(customerId).getId();
 	}
 
 	public String getMerchantId(String merchantId) {
-		return merchants.getAccountId(merchantId);
+		Account merchantAccount = merchants.getAccount(merchantId);
+		if(merchantAccount != null) return merchantAccount.getId();
+		else return "Couldn't find merchant";
+//		return merchants.getAccount(merchantId).getId();
 	}
 
 	public void deleteCustomer(String id) {

@@ -25,7 +25,7 @@ Feature: Account
 		Then the merchant no longer exists
 
 	Scenario: Delete account that does not exist
-		Given account ID "abc"
+		Given user ID "abc"
 		When the customer account is deleted
 		Then the customer no longer exists
 
