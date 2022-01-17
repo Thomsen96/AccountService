@@ -73,7 +73,7 @@ public class AccountService {
 		return merchants.verify(id);
 	}
 
-	public Object getStatus() {
+	public String getStatus() {
 		return "Sanitity check for account service";
 	}
 }

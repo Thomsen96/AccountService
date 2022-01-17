@@ -52,5 +52,9 @@ Feature: Account
 		When a request is received for verification
 		Then a uid is received and verification of the custumer is returned
 
+	Scenario: Token service status
+		When the account service is requested for its status
+		Then the status message is "Sanitity check for account service"
+
 
 

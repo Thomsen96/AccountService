@@ -3,6 +3,7 @@ package dtu.group2;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CompletableFuture;
 
 import dtu.group2.Application.AccountService;
 import dtu.group2.Presentation.Resources.AccountEventHandler;
@@ -27,10 +28,13 @@ public class AccountServiceSteps {
     String accountID;
     String userId;
     Exception exception;
+    String status;
 
-    private static AccountService ass = new AccountService(new CustomerRepository(), new MerchantRepository());
+//    private CompletableFuture<String> statusMessage = new CompletableFuture<>();
+
+    private static AccountService accountService = new AccountService(new CustomerRepository(), new MerchantRepository());
     MessageQueue mq = mock(RabbitMqQueue.class);
-    AccountEventHandler messageService = new AccountEventHandler(mq, ass);
+    AccountEventHandler messageService = new AccountEventHandler(mq, accountService);
     BankService bank = new BankServiceService().getBankServicePort();
 
     @After
@@ -58,24 +62,24 @@ public class AccountServiceSteps {
 
     @When("a customer tries to create an account")
     public void aCustomerTriesToCreateAnAccount() throws BankServiceException_Exception {
-        this.userId = ass.createCustomer(accountID);
+        this.userId = accountService.createCustomer(accountID);
     }
 
     @When("a merchant tries to create an account")
     public void aMerchantTriesToCreateAnAccount() throws BankServiceException_Exception {
-        this.userId = ass.createMerchant(accountID);
+        this.userId = accountService.createMerchant(accountID);
     }
 
     @Then("a customer account exists with that accountID")
     public void aCustomerAccountExistsWithThatAccountID() {
-        assertNotNull(ass.getCustomer(userId));
-        assertEquals(ass.getCustomerId(userId), accountID);
+        assertNotNull(accountService.getCustomer(userId));
+        assertEquals(accountService.getCustomerId(userId), accountID);
     }
 
     @Then("a merchant account exists with that accountID")
     public void aMerchantAccountExistsWithThatAccountID() {
-        assertNotNull(ass.getMerchant(userId));
-        assertEquals(ass.getMerchantId(userId), accountID);
+        assertNotNull(accountService.getMerchant(userId));
+        assertEquals(accountService.getMerchantId(userId), accountID);
     }
 
     @Given("a user with no first name, last name or cpr number")
@@ -85,28 +89,28 @@ public class AccountServiceSteps {
 
     @Then("the customer no longer exists")
     public void theCustomerNoLongerExists() {
-        assertNull(ass.getCustomer(userId));
+        assertNull(accountService.getCustomer(userId));
     }
 
     @When("the customer account is deleted")
     public void theAccountWithAccountIDIsDeleted() {
-        ass.deleteCustomer(userId);
+        accountService.deleteCustomer(userId);
     }
 
     @And("the merchant account is deleted")
     public void theMerchantAccountIsDeleted() {
-        ass.deleteMerchant(userId);
+        accountService.deleteMerchant(userId);
     }
 
     @Then("the merchant no longer exists")
     public void theMerchantNoLongerExists() {
-        assertNull(ass.getMerchant(userId));
+        assertNull(accountService.getMerchant(userId));
     }
 
     @When("the customer account is fetched")
     public void theAccountIsFetched() {
         try {
-            ass.getCustomer(userId);
+            accountService.getCustomer(userId);
         } catch (Exception e) {
             this.exception = e;
         }
@@ -131,7 +135,7 @@ public class AccountServiceSteps {
 
     @Then("a uid is received and customer returned")
     public void aUidIsReceived() {
-        Account customer = ass.getCustomer(userId);
+        Account customer = accountService.getCustomer(userId);
         Event event = new Event("ResponseCustomer", new Object[]{customer});
         verify(mq).publish(event);
     }
@@ -144,13 +148,27 @@ public class AccountServiceSteps {
 
     @Then("a uid is received and verification of the custumer is returned")
     public void aUidIsReceivedAndVerificationOfTheCustumerIsReturned() {
-        Event e = new Event("CustomerVerificationResponse", new Object[] { ass.verifyCustomer(userId) } );
+        Event e = new Event("CustomerVerificationResponse", new Object[] { accountService.verifyCustomer(userId) } );
         verify(mq).publish(e);
     }
 
     @Then("a uid is received and merchant returned")
     public void aUidIsReceivedAndMerchantReturned() {
-        assertNotNull(ass.getMerchant(userId));
-        assertEquals(ass.getMerchantId(userId), accountID);
+        assertNotNull(accountService.getMerchant(userId));
+        assertEquals(accountService.getMerchantId(userId), accountID);
+    }
+
+    @When("the account service is requested for its status")
+    public void theAccountServiceIsRequestedForItsStatus() {
+        this.status = accountService.getStatus();
+//        new Thread(() -> {
+//            String status = accountService.getStatus();
+//            statusMessage.complete(status);
+//        }).start();
+    }
+
+    @Then("the status message is {string}")
+    public void theStatusMessageIs(String expectedStatus) {
+        assertEquals(this.status, expectedStatus);
     }
 }
