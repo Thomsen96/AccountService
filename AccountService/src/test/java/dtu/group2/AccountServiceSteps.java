@@ -167,4 +167,40 @@ public class AccountServiceSteps {
     public void theStatusMessageIs(String expectedStatus) {
         assertEquals(this.status, expectedStatus);
     }
+
+    @When("the account services is requested for a merchant accountNumber")
+    public void theAccountServicesIsRequestedForAMerchantAccountNumber() {
+        Event e = new Event("MerchantIdToAccountNumberRequest", new Object[] { userId, sessionId });
+        messageService.handleMerchantIdToAccountNumberRequest(e);
+    }
+
+    @Then("the merchant accountNumber is placed back on the queue")
+    public void theMerchantAccountNumberIsPlacedBackOnTheQueue() {
+        Event e = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{true, accountID, sessionId});
+        verify(mq).publish(e);
+    }
+
+    @When("the account services is requested for a customer accountNumber")
+    public void theAccountServicesIsRequestedForACustomerAccountNumber() {
+        Event e = new Event("CustomerIdToAccountNumberRequest", new Object[] { userId, sessionId });
+        messageService.handleCustomerIdToAccountNumberRequest(e);
+    }
+
+    @Then("the customer accountNumber is placed back on the queue")
+    public void theCustomerAccountNumberIsPlacedBackOnTheQueue() {
+        Event e = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{true, accountID, sessionId});
+        verify(mq).publish(e);
+    }
+
+    @Then("The merchant errormessage {string} is placed back on the queue")
+    public void theMerchantErrormessageIsPlacedBackOnTheQueue(String errorMessage) {
+        Event e = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{false, errorMessage, sessionId});
+        verify(mq).publish(e);
+    }
+
+    @Then("The customer errormessage {string} is placed back on the queue")
+    public void theCustomerErrormessageIsPlacedBackOnTheQueue(String errorMessage) {
+        Event e = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{false, errorMessage, sessionId});
+        verify(mq).publish(e);
+    }
 }

@@ -33,15 +33,13 @@ public class AccountService {
 	public String getCustomerId(String customerId) {
 		Account customerAccount = customers.getAccount(customerId);
 		if(customerAccount != null) return customerAccount.getId();
-		else return "Couldn't find customer";
-//		return customers.getAccount(customerId).getId();
+		else return null;
 	}
 
 	public String getMerchantId(String merchantId) {
 		Account merchantAccount = merchants.getAccount(merchantId);
 		if(merchantAccount != null) return merchantAccount.getId();
-		else return "Couldn't find merchant";
-//		return merchants.getAccount(merchantId).getId();
+		else return null;
 	}
 
 	public void deleteCustomer(String id) {

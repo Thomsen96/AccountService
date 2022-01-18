@@ -56,5 +56,26 @@ Feature: Account
 		When the account service is requested for its status
 		Then the status message is "Sanitity check for account service"
 
+	Scenario: Successfully find merchant and return accountNumber on request
+		Given a user with first name "Johnson1", last name "McJohnson1" and cpr number "666999-69691" and balance of "420"
+		When a merchant tries to create an account
+		When a request is received for verification
+		When the account services is requested for a merchant accountNumber
+		Then the merchant accountNumber is placed back on the queue
+
+	Scenario: Unsuccessfully find merchant and return accountNumber on request
+		When the account services is requested for a merchant accountNumber
+		Then The merchant errormessage "No merchant exists with the provided id" is placed back on the queue
+
+	Scenario: Successfully find customer and return accountNumber on request
+		Given a user with first name "Johnson1", last name "McJohnson1" and cpr number "666999-69691" and balance of "420"
+		When a customer tries to create an account
+		When a request is received for verification
+		When the account services is requested for a customer accountNumber
+		Then the customer accountNumber is placed back on the queue
+
+	Scenario: Unsuccessfully find customer and return accountNumber on request
+		When the account services is requested for a customer accountNumber
+		Then The customer errormessage "No customer exists with the provided id" is placed back on the queue
 
 

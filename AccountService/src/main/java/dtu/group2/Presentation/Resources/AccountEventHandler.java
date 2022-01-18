@@ -19,7 +19,7 @@ public class AccountEventHandler {
         this.messageQueue = messageQueue;
         this.accountService = as;
 
-        this.messageQueue.addHandler("AccountStatusResponse", this::handleAccountStatusRequest);
+        this.messageQueue.addHandler("AccountStatusRequest", this::handleAccountStatusRequest);
 
         this.messageQueue.addHandler("GetCustomer", this::handleGetCustomer);
         this.messageQueue.addHandler("GetMerchant", this::handleGetMerchant);
@@ -37,12 +37,12 @@ public class AccountEventHandler {
 
 
 
-    private void handleGetMerchant(Event event) {
-    }
+
 
     public void handleAccountStatusRequest(Event e) {
         System.out.println("Received a request to send back to status the service");
-        Event event = new Event("AccountStatusResponse", new Object[] {accountService.getStatus()});
+        String sessionId = e.getArgument(0, String.class);
+        Event event = new Event("AccountStatusResponse", new Object[] {accountService.getStatus(), sessionId});
         messageQueue.publish(event);
     }
 
@@ -54,9 +54,9 @@ public class AccountEventHandler {
         } catch (Exception e){
             e.printStackTrace();
         }
-        Event response = new Event("CustomerCreationResponse." + sessionId, new Object[]{customerId});;
+        Event response = new Event("CustomerCreationResponse." + sessionId, new Object[]{customerId, sessionId});;
         if(accountService.getMerchant(customerId) == null) {
-            response = new Event("CustomerCreationResponse." + sessionId, new Object[]{"AN ERROR HAS OCCURED - COULD NOT CREATE CUSTOMER"});
+            response = new Event("CustomerCreationResponse." + sessionId, new Object[]{"AN ERROR HAS OCCURED - COULD NOT CREATE CUSTOMER", sessionId});
         }
         messageQueue.publish(response);
     }
@@ -102,7 +102,19 @@ public class AccountEventHandler {
         }
     }
 
-    private void handleMerchantIdToAccountNumberRequest(Event event) {
+    private void handleGetMerchant(Event e) {
+        try {
+            String id = e.getArgument(0, String.class);
+            String sessionId = e.getArgument(1, String.class);
+            Account merchant = accountService.getMerchant(id);
+            Event event = new Event("ResponseMerchant."+sessionId, new Object[]{merchant, sessionId});
+            messageQueue.publish(event);
+        } catch(Exception ex){
+
+        }
+    }
+
+    public void handleMerchantIdToAccountNumberRequest(Event event) {
         String id = event.getArgument(0, String.class);
         String sessionId = event.getArgument(1, String.class);
         String merchantAccountId = accountService.getMerchantId(id);
@@ -113,7 +125,7 @@ public class AccountEventHandler {
         messageQueue.publish(response);
     }
 
-    private void handleCustomerIdToAccountNumberRequest(Event event) {
+    public void handleCustomerIdToAccountNumberRequest(Event event) {
         String id = event.getArgument(0, String.class);
         String sessionId = event.getArgument(1, String.class);
         String customerAccountId = accountService.getCustomerId(id);
