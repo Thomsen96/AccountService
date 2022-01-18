@@ -123,32 +123,32 @@ public class AccountServiceSteps {
     
     @Then("a messagequeue message is produced")
     public void aMessagequeueMessageIsProduced() {	
-		Event event = new Event("getCustomer", new Object[] {userId, sessionId});
+		Event event = new Event("getCustomer", new Object[] {sessionId, userId});
 		mq.publish(event);
     }
 
     @When("a request is received")
     public void aRequestIsReceived() {
-        Event e = new Event("GetCustomer", new Object[] { userId, sessionId } );
+        Event e = new Event("GetCustomer", new Object[] { sessionId, userId } );
         messageService.handleGetCustomer(e);
     }
 
     @Then("a uid is received and customer returned")
     public void aUidIsReceived() {
         Account customer = accountService.getCustomer(userId);
-        Event event = new Event("ResponseCustomer." + sessionId, new Object[]{ customer, sessionId });
+        Event event = new Event("ResponseCustomer." + sessionId, new Object[]{ sessionId, customer });
         verify(mq).publish(event);
     }
 
     @When("a request is received for verification")
     public void aRequestIsReceivedForVerification() {
-        Event e = new Event("CustomerVerificationRequested", new Object[]{ userId, sessionId });
+        Event e = new Event("CustomerVerificationRequested", new Object[]{ sessionId, userId });
         messageService.handleCustomerVerificationRequest(e);
     }
 
     @Then("a uid is received and verification of the custumer is returned")
     public void aUidIsReceivedAndVerificationOfTheCustumerIsReturned() {
-        Event e = new Event("CustomerVerificationResponse." + sessionId, new Object[] { accountService.verifyCustomer(userId), sessionId } );
+        Event e = new Event("CustomerVerificationResponse." + sessionId, new Object[] { sessionId, accountService.verifyCustomer(userId) } );
         verify(mq).publish(e);
     }
 
@@ -170,37 +170,37 @@ public class AccountServiceSteps {
 
     @When("the account services is requested for a merchant accountNumber")
     public void theAccountServicesIsRequestedForAMerchantAccountNumber() {
-        Event e = new Event("MerchantIdToAccountNumberRequest", new Object[] { userId, sessionId });
+        Event e = new Event("MerchantIdToAccountNumberRequest", new Object[] { sessionId, userId });
         messageService.handleMerchantIdToAccountNumberRequest(e);
     }
 
     @Then("the merchant accountNumber is placed back on the queue")
     public void theMerchantAccountNumberIsPlacedBackOnTheQueue() {
-        Event e = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{true, accountID, sessionId});
+        Event e = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{ sessionId, true, accountID });
         verify(mq).publish(e);
     }
 
     @When("the account services is requested for a customer accountNumber")
     public void theAccountServicesIsRequestedForACustomerAccountNumber() {
-        Event e = new Event("CustomerIdToAccountNumberRequest", new Object[] { userId, sessionId });
+        Event e = new Event("CustomerIdToAccountNumberRequest", new Object[] { sessionId, userId });
         messageService.handleCustomerIdToAccountNumberRequest(e);
     }
 
     @Then("the customer accountNumber is placed back on the queue")
     public void theCustomerAccountNumberIsPlacedBackOnTheQueue() {
-        Event e = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{true, accountID, sessionId});
+        Event e = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{ sessionId, true, accountID });
         verify(mq).publish(e);
     }
 
     @Then("The merchant errormessage {string} is placed back on the queue")
     public void theMerchantErrormessageIsPlacedBackOnTheQueue(String errorMessage) {
-        Event e = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{false, errorMessage, sessionId});
+        Event e = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{ sessionId, false, errorMessage });
         verify(mq).publish(e);
     }
 
     @Then("The customer errormessage {string} is placed back on the queue")
     public void theCustomerErrormessageIsPlacedBackOnTheQueue(String errorMessage) {
-        Event e = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{false, errorMessage, sessionId});
+        Event e = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{ sessionId, false, errorMessage });
         verify(mq).publish(e);
     }
 }
