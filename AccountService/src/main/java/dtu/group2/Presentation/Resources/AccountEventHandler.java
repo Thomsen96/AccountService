@@ -3,7 +3,9 @@ package dtu.group2.Presentation.Resources;
 import dtu.group2.Application.AccountService;
 import dtu.ws.fastmoney.Account;
 import dtu.ws.fastmoney.BankServiceException_Exception;
+import io.cucumber.java.an.E;
 import messaging.Event;
+import messaging.EventResponse;
 import messaging.MessageQueue;
 
 import java.util.concurrent.CompletableFuture;
@@ -35,98 +37,115 @@ public class AccountEventHandler {
 
     public void handleAccountStatusRequest(Event e) {
         System.out.println("Received a request to send back to status the service");
-        String sessionId = e.getArgument(0, String.class);
-        Event event = new Event("AccountStatusResponse", new Object[] {accountService.getStatus(), sessionId});
+        var eventRes = e.getArgument(0, EventResponse.class);
+        String sessionId = eventRes.getSessionId();
+        EventResponse eventResponse = new EventResponse(sessionId, true, null, accountService.getStatus());
+        Event event = new Event("AccountStatusResponse", eventResponse);
         messageQueue.publish(event);
     }
 
     public void createCustomerAccountRequest(Event event) {
-        String sessionId = event.getArgument(0, String.class);
-        String customerId = event.getArgument(1, String.class);
-        try{
-            accountService.createCustomer(customerId);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        Event response = new Event("CustomerCreationResponse." + sessionId, new Object[]{sessionId, customerId});;
+        var res = event.getArgument(0, EventResponse.class);
+        String sessionId = res.getSessionId();
+        String customerId = res.getArgument(0, String.class);
+        try{ accountService.createCustomer(customerId);
+        } catch (Exception e) { e.printStackTrace(); }
+        EventResponse eventResponse = new EventResponse(sessionId, true, null, customerId);
         if(accountService.getMerchant(customerId) == null) {
-            response = new Event("CustomerCreationResponse." + sessionId, new Object[]{sessionId, "AN ERROR HAS OCCURED - COULD NOT CREATE CUSTOMER"});
+            eventResponse = new EventResponse(sessionId, false, "AN ERROR HAS OCCURED - COULD NOT CREATE CUSTOMER");
         }
+        Event response = new Event("CustomerCreationResponse." + sessionId, eventResponse);
         messageQueue.publish(response);
     }
 
     public void createMerchantAccountRequest(Event event) {
-        String sessionId = event.getArgument(0, String.class);
-        String merchantId = event.getArgument(1, String.class);
-        try{
-            accountService.createMerchant(merchantId);
-        } catch (Exception e){
-            e.printStackTrace();
+        var res = event.getArgument(0, EventResponse.class);
+        String sessionId = res.getSessionId();
+        String id = res.getArgument(0, String.class);
+        try{ accountService.createMerchant(id);
+        } catch (Exception e) { e.printStackTrace(); }
+        EventResponse eventResponse = new EventResponse(sessionId, true, null, id);
+        if(accountService.getMerchant(id) == null) {
+            eventResponse = new EventResponse(sessionId, false, "AN ERROR HAS OCCURED - COULD NOT CREATE MERCHANT");
         }
-        Event response = new Event("MerchantCreationResponse." + sessionId, new Object[]{sessionId, merchantId});;
-        if(accountService.getMerchant(merchantId) == null) {
-            response = new Event("MerchantCreationResponse." + sessionId, new Object[]{sessionId, "AN ERROR HAS OCCURED - COULD NOT CREATE MERCHANT"});
-        }
+        Event response = new Event("MerchantCreationResponse." + sessionId, eventResponse);
         messageQueue.publish(response);
     }
 
     public void handleCustomerVerificationRequest(Event event)  {
-        String sessionId = event.getArgument(0, String.class);
-        String id = event.getArgument(1, String.class);
-        Event response = new Event("CustomerVerificationResponse." + sessionId, new Object[] { sessionId, accountService.verifyCustomer(id) } );
+        var res = event.getArgument(0, EventResponse.class);
+        String sessionId = res.getSessionId();
+        String id = res.getArgument(0, String.class);
+        EventResponse eventResponse = new EventResponse(sessionId, false, "Customer is not verified");
+        if(accountService.verifyCustomer(id)){
+            eventResponse = new EventResponse(sessionId, true, null);
+        }
+        Event response = new Event("CustomerVerificationResponse." + sessionId, eventResponse );
         messageQueue.publish(response);
     }
 
     public void handleMerchantVerificationRequest(Event event) {
-        String sessionId = event.getArgument(0, String.class);
-        String id = event.getArgument(1, String.class);
-        Event response = new Event("MerchantVerificationResponse." + sessionId, new Object[] { sessionId, accountService.verifyMerchant(id) } );
+        var res = event.getArgument(0, EventResponse.class);
+        String sessionId = res.getSessionId();
+        String id = res.getArgument(0, String.class);
+        EventResponse eventResponse = new EventResponse(sessionId, false, "Merchant is not verified");
+        if(accountService.verifyMerchant(id)){
+            eventResponse = new EventResponse(sessionId, true, null);
+        }
+        Event response = new Event("MerchantVerificationResponse." + sessionId, eventResponse );
         messageQueue.publish(response);
     }
 
     public void handleGetCustomer(Event e) {
-        try {
-            String sessionId = e.getArgument(0, String.class);
-            String id = e.getArgument(1, String.class);
-            Account customer = accountService.getCustomer(id);
-            Event event = new Event("ResponseCustomer."+sessionId, new Object[]{sessionId, customer});
-            messageQueue.publish(event);
-        } catch(Exception ex){
-
+        var res = e.getArgument(0, EventResponse.class);
+        String sessionId = res.getSessionId();
+        String id = res.getArgument(0, String.class);
+        Account customer = accountService.getCustomer(id);
+        EventResponse eventResponse = new EventResponse(sessionId, true, "No customer exists with that id");
+        if(customer != null){
+            eventResponse = new EventResponse(sessionId, true, null, customer);
         }
+        Event event = new Event("ResponseCustomer." + sessionId, eventResponse);
+        System.out.println("handler: " + event.getArgument(0, EventResponse.class));
+        messageQueue.publish(event);
     }
 
     private void handleGetMerchant(Event e) {
-        try {
-            String sessionId = e.getArgument(0, String.class);
-            String id = e.getArgument(1, String.class);
-            Account merchant = accountService.getMerchant(id);
-            Event event = new Event("ResponseMerchant."+sessionId, new Object[]{sessionId, merchant});
-            messageQueue.publish(event);
-        } catch(Exception ex){
-
+        var res = e.getArgument(0, EventResponse.class);
+        String sessionId = res.getSessionId();
+        String id = res.getArgument(0, String.class);
+        Account merchant = accountService.getMerchant(id);
+        EventResponse eventResponse = new EventResponse(sessionId, true, "No merchant exists with that id");
+        if(merchant != null){
+            eventResponse = new EventResponse(sessionId, true, null, merchant);
         }
+        Event event = new Event("ResponseMerchant."+sessionId, eventResponse);
+        messageQueue.publish(event);
     }
 
     public void handleMerchantIdToAccountNumberRequest(Event event) {
-        String sessionId = event.getArgument(0, String.class);
-        String id = event.getArgument(1, String.class);
+        var res = event.getArgument(0, EventResponse.class);
+        String sessionId = res.getSessionId();
+        String id = res.getArgument(0, String.class);
         String merchantAccountId = accountService.getMerchantId(id);
-        Event response = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{sessionId, true, merchantAccountId});
+        EventResponse eventResponse = new EventResponse(sessionId, true, null, merchantAccountId);
         if(merchantAccountId == null){
-            response = new Event("MerchantIdToAccountNumberResponse." + sessionId, new Object[]{sessionId, false, "No merchant exists with the provided id"});
+            eventResponse = new EventResponse(sessionId, false, "No merchant exists with the provided id");
         }
+        Event response = new Event("MerchantIdToAccountNumberResponse." + sessionId, eventResponse);
         messageQueue.publish(response);
     }
 
     public void handleCustomerIdToAccountNumberRequest(Event event) {
-        String sessionId = event.getArgument(0, String.class);
-        String id = event.getArgument(1, String.class);
+        var res = event.getArgument(0, EventResponse.class);
+        String sessionId = res.getSessionId();
+        String id = res.getArgument(0, String.class);
         String customerAccountId = accountService.getCustomerId(id);
-        Event response = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{sessionId, true, customerAccountId});
+        EventResponse eventResponse = new EventResponse(sessionId, true, null, customerAccountId);
         if(customerAccountId == null){
-            response = new Event("CustomerIdToAccountNumberResponse." + sessionId, new Object[]{sessionId, false, "No customer exists with the provided id"});
+            eventResponse = new EventResponse(sessionId, false, "No customer exists with the provided id");
         }
+        Event response = new Event("CustomerIdToAccountNumberResponse." + sessionId, eventResponse);
         messageQueue.publish(response);
     }
 }
