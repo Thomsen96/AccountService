@@ -3,6 +3,7 @@ package dtu.group2;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import dtu.group2.Application.AccountService;
 import dtu.group2.Presentation.Resources.AccountEventHandler;
@@ -27,6 +28,7 @@ public class AccountServiceSteps {
     String userId;
     Exception exception;
     String status;
+    String sessionId = UUID.randomUUID().toString();
 
 //    private CompletableFuture<String> statusMessage = new CompletableFuture<>();
 
@@ -121,32 +123,32 @@ public class AccountServiceSteps {
     
     @Then("a messagequeue message is produced")
     public void aMessagequeueMessageIsProduced() {	
-		Event event = new Event("getCustomer", new Object[] {userId});
+		Event event = new Event("getCustomer", new Object[] {userId, sessionId});
 		mq.publish(event);
     }
 
     @When("a request is received")
     public void aRequestIsReceived() {
-        Event e = new Event("GetCustomer", new Object[] { userId } );
+        Event e = new Event("GetCustomer", new Object[] { userId, sessionId } );
         messageService.handleGetCustomer(e);
     }
 
     @Then("a uid is received and customer returned")
     public void aUidIsReceived() {
         Account customer = accountService.getCustomer(userId);
-        Event event = new Event("ResponseCustomer", new Object[]{customer});
+        Event event = new Event("ResponseCustomer." + sessionId, new Object[]{ customer, sessionId });
         verify(mq).publish(event);
     }
 
     @When("a request is received for verification")
     public void aRequestIsReceivedForVerification() {
-        Event e = new Event("CustomerVerificationRequested", new Object[]{ userId });
+        Event e = new Event("CustomerVerificationRequested", new Object[]{ userId, sessionId });
         messageService.handleCustomerVerificationRequest(e);
     }
 
     @Then("a uid is received and verification of the custumer is returned")
     public void aUidIsReceivedAndVerificationOfTheCustumerIsReturned() {
-        Event e = new Event("CustomerVerificationResponse", new Object[] { accountService.verifyCustomer(userId) } );
+        Event e = new Event("CustomerVerificationResponse." + sessionId, new Object[] { accountService.verifyCustomer(userId), sessionId } );
         verify(mq).publish(e);
     }
 
@@ -159,10 +161,6 @@ public class AccountServiceSteps {
     @When("the account service is requested for its status")
     public void theAccountServiceIsRequestedForItsStatus() {
         this.status = accountService.getStatus();
-//        new Thread(() -> {
-//            String status = accountService.getStatus();
-//            statusMessage.complete(status);
-//        }).start();
     }
 
     @Then("the status message is {string}")

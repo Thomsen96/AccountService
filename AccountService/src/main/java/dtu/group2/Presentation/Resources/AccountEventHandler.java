@@ -95,7 +95,7 @@ public class AccountEventHandler {
             String id = e.getArgument(0, String.class);
             String sessionId = e.getArgument(1, String.class);
             Account customer = accountService.getCustomer(id);
-            Event event = new Event("ResponseCustomer", new Object[]{customer, sessionId});
+            Event event = new Event("ResponseCustomer."+sessionId, new Object[]{customer, sessionId});
             messageQueue.publish(event);
         } catch(Exception ex){
 
