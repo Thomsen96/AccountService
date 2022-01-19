@@ -149,7 +149,7 @@ public class AccountServiceSteps {
     @When("a request is received for verification")
     public void aRequestIsReceivedForVerification() {
         EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
-        Event e = new Event("CustomerVerificationRequested", eventResponse);
+        Event e = new Event("CustomerVerificationRequest", eventResponse);
         messageService.handleCustomerVerificationRequest(e);
     }
 

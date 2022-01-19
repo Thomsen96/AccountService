@@ -21,11 +21,11 @@ public class AccountEventHandler {
         this.messageQueue.addHandler("GetCustomer", this::handleGetCustomer);
         this.messageQueue.addHandler("GetMerchant", this::handleGetMerchant);
 
-        this.messageQueue.addHandler("CustomerVerificationRequested", this::handleCustomerVerificationRequest);
-        this.messageQueue.addHandler("MerchantVerificationRequested", this::handleMerchantVerificationRequest);
+        this.messageQueue.addHandler("CustomerVerificationRequest", this::handleCustomerVerificationRequest);
+        this.messageQueue.addHandler("MerchantVerificationRequest", this::handleMerchantVerificationRequest);
 
-        this.messageQueue.addHandler("CustomerCreationRequested", this::createCustomerAccountRequest);
-        this.messageQueue.addHandler("MerchantCreationRequested", this::createMerchantAccountRequest);
+        this.messageQueue.addHandler("CustomerCreationRequest", this::createCustomerAccountRequest);
+        this.messageQueue.addHandler("MerchantCreationRequest", this::createMerchantAccountRequest);
 
         this.messageQueue.addHandler("MerchantIdToAccountNumberRequest", this::handleMerchantIdToAccountNumberRequest);
         this.messageQueue.addHandler("CustomerIdToAccountNumberRequest", this::handleCustomerIdToAccountNumberRequest);
