@@ -36,7 +36,7 @@ public class AccountEventHandler {
         var eventRes = e.getArgument(0, EventResponse.class);
         String sessionId = eventRes.getSessionId();
         EventResponse eventResponse = new EventResponse(sessionId, true, null, accountService.getStatus());
-        Event event = new Event("AccountStatusResponse", eventResponse);
+        Event event = new Event("AccountStatusResponse." + sessionId, eventResponse);
         messageQueue.publish(event);
     }
 
