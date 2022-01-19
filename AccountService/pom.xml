@@ -142,7 +142,7 @@
 						<index>true</index>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>dtu.group2.Presentation.Resources.Runner</mainClass>
+							<mainClass>dtu.presentation.Runner</mainClass>
 							<classpathPrefix>lib/</classpathPrefix>
 						</manifest>
 					</archive>

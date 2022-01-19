@@ -1,4 +1,4 @@
-package dtu.group2.Domain.Entities;
+package dtu.domain;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

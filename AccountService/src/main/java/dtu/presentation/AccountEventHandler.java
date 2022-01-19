@@ -1,14 +1,10 @@
-package dtu.group2.Presentation.Resources;
+package dtu.presentation;
 
-import dtu.group2.Application.AccountService;
+import dtu.application.AccountService;
 import dtu.ws.fastmoney.Account;
-import dtu.ws.fastmoney.BankServiceException_Exception;
-import io.cucumber.java.an.E;
 import messaging.Event;
 import messaging.EventResponse;
 import messaging.MessageQueue;
-
-import java.util.concurrent.CompletableFuture;
 
 public class AccountEventHandler {
 	

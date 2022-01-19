@@ -1,5 +1,5 @@
-package dtu.group2.Application;
-import dtu.group2.Interfaces.IAccountRepository;
+package dtu.application;
+import dtu.infrastructure.interfaces.IAccountRepository;
 import dtu.ws.fastmoney.*;
 
 public class AccountService {

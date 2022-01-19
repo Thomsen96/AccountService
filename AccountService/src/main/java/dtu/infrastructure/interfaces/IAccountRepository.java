@@ -1,9 +1,7 @@
-package dtu.group2.Interfaces;
+package dtu.infrastructure.interfaces;
 
 import dtu.ws.fastmoney.Account;
 import dtu.ws.fastmoney.BankService;
-import dtu.ws.fastmoney.BankServiceException_Exception;
-import dtu.ws.fastmoney.BankServiceService;
 
 import java.util.Collection;
 import java.util.HashMap;

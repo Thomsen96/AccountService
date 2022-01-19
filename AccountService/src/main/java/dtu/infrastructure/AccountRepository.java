@@ -1,6 +1,6 @@
-package dtu.group2.Repositories;
+package dtu.infrastructure;
 
-import dtu.group2.Interfaces.IAccountRepository;
+import dtu.infrastructure.interfaces.IAccountRepository;
 import dtu.ws.fastmoney.Account;
 
 import java.util.Collection;

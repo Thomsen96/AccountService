@@ -1,8 +1,8 @@
-package dtu.group2.Presentation.Resources;
+package dtu.presentation;
 
-import dtu.group2.Application.AccountService;
-import dtu.group2.Infrastructure.MessageQueueFactory;
-import dtu.group2.Repositories.AccountRepository;
+import dtu.application.AccountService;
+import dtu.infrastructure.MessageQueueFactory;
+import dtu.infrastructure.AccountRepository;
 import messaging.MessageQueue;
 
 public class Runner {

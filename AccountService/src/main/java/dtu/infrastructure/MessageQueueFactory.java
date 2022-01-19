@@ -1,4 +1,4 @@
-package dtu.group2.Infrastructure;
+package dtu.infrastructure;
 
 import messaging.MessageQueue;
 import messaging.implementations.RabbitMqQueue;
