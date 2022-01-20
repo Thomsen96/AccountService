@@ -43,11 +43,13 @@ public class AccountEventHandler {
     public void createCustomerAccountRequest(Event event) {
         var res = event.getArgument(0, EventResponse.class);
         String sessionId = res.getSessionId();
-        String customerId = res.getArgument(0, String.class);
-        try{ accountService.createCustomer(customerId);
+        String accountNumber = res.getArgument(0, String.class);
+        String userId = "";
+        try { 
+        	userId = accountService.createCustomer(accountNumber);
         } catch (Exception e) { e.printStackTrace(); }
-        EventResponse eventResponse = new EventResponse(sessionId, true, null, customerId);
-        if(accountService.getMerchant(customerId) == null) {
+        EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
+        if(accountService.getCustomer(userId) == null) {
             eventResponse = new EventResponse(sessionId, false, "AN ERROR HAS OCCURED - COULD NOT CREATE CUSTOMER");
         }
         Event response = new Event("CustomerCreationResponse." + sessionId, eventResponse);
@@ -57,11 +59,13 @@ public class AccountEventHandler {
     public void createMerchantAccountRequest(Event event) {
         var res = event.getArgument(0, EventResponse.class);
         String sessionId = res.getSessionId();
-        String id = res.getArgument(0, String.class);
-        try{ accountService.createMerchant(id);
+        String accountNumber = res.getArgument(0, String.class);
+        String userId = "";
+        try{ 
+        	userId = accountService.createMerchant(accountNumber);
         } catch (Exception e) { e.printStackTrace(); }
-        EventResponse eventResponse = new EventResponse(sessionId, true, null, id);
-        if(accountService.getMerchant(id) == null) {
+        EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
+        if(accountService.getMerchant(userId) == null) {
             eventResponse = new EventResponse(sessionId, false, "AN ERROR HAS OCCURED - COULD NOT CREATE MERCHANT");
         }
         Event response = new Event("MerchantCreationResponse." + sessionId, eventResponse);
