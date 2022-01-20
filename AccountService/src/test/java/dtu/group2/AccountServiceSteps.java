@@ -1,5 +1,8 @@
 package dtu.group2;
 
+import static messaging.GLOBAL_STRINGS.ACCOUNT_SERVICE.HANDLE.*;
+import static messaging.GLOBAL_STRINGS.ACCOUNT_SERVICE.PUBLISH.*;
+import static messaging.GLOBAL_STRINGS.TOKEN_SERVICE.HANDLE.CUSTOMER_VERIFICATION_REQUESTED;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
@@ -128,14 +131,14 @@ public class AccountServiceSteps {
     @Then("a messagequeue message is produced")
     public void aMessagequeueMessageIsProduced() {
         EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
-		Event event = new Event("GetCustomer", eventResponse);
+		Event event = new Event(GET_CUSTOMER, eventResponse);
 		mq.publish(event);
     }
 
     @When("a request is received")
     public void aRequestIsReceived() {
         EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
-        Event e = new Event("GetCustomer", eventResponse );
+        Event e = new Event(GET_CUSTOMER, eventResponse );
         messageService.handleGetCustomer(e);
     }
 
@@ -143,16 +146,16 @@ public class AccountServiceSteps {
     public void aUidIsReceived() {
         Account customer = accountService.getCustomer(userId);
         EventResponse eventResponse = new EventResponse(sessionId, true, null, customer);
-        Event event = new Event("ResponseCustomer." + sessionId, eventResponse);
+        Event event = new Event(CUSTOMER_RESPONDED + sessionId, eventResponse);
         System.out.println("Test: " + event.getArgument(0, EventResponse.class));
-        assertEquals(mq.getEvent("ResponseCustomer." + sessionId), event);
+        assertEquals(mq.getEvent(CUSTOMER_RESPONDED + sessionId), event);
 //        verify(mq).publish(event);
     }
 
     @When("a request is received for verification")
     public void aRequestIsReceivedForVerification() {
         EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
-        Event e = new Event("CustomerVerificationRequest", eventResponse);
+        Event e = new Event(CUSTOMER_VERIFICATION_REQUESTED, eventResponse);
         messageService.handleCustomerVerificationRequest(e);
     }
 
@@ -164,8 +167,8 @@ public class AccountServiceSteps {
         } else {
             eventResponse = new EventResponse(sessionId, false, "Customer is not verified");
         }
-        Event e = new Event("CustomerVerificationResponse." + sessionId, eventResponse);
-        assertEquals(mq.getEvent("CustomerVerificationResponse." + sessionId), e);
+        Event e = new Event(CUSTOMER_VERIFICATION_RESPONDED + sessionId, eventResponse);
+        assertEquals(mq.getEvent(CUSTOMER_VERIFICATION_RESPONDED + sessionId), e);
 //        mq.verify(mq).publish(e);
     }
 
@@ -188,46 +191,46 @@ public class AccountServiceSteps {
     @When("the account services is requested for a merchant accountNumber")
     public void theAccountServicesIsRequestedForAMerchantAccountNumber() {
         EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
-        Event e = new Event("MerchantIdToAccountNumberRequest", eventResponse);
+        Event e = new Event(MERCHANT_ID_TO_ACCOUNT_NUMBER_REQUESTED, eventResponse);
         messageService.handleMerchantIdToAccountNumberRequest(e);
     }
 
     @Then("the merchant accountNumber is placed back on the queue")
     public void theMerchantAccountNumberIsPlacedBackOnTheQueue() {
         EventResponse eventResponse = new EventResponse(sessionId, true, null, accountID);
-        Event e = new Event("MerchantIdToAccountNumberResponse." + sessionId, eventResponse);
-        assertEquals(mq.getEvent("MerchantIdToAccountNumberResponse." + sessionId), e);
+        Event e = new Event(MERCHANT_TO_ACCOUNT_NUMBER_RESPONDED + sessionId, eventResponse);
+        assertEquals(mq.getEvent(MERCHANT_TO_ACCOUNT_NUMBER_RESPONDED + sessionId), e);
 //        verify(mq).publish(e);
     }
 
     @When("the account services is requested for a customer accountNumber")
     public void theAccountServicesIsRequestedForACustomerAccountNumber() {
         EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
-        Event e = new Event("CustomerIdToAccountNumberRequest", eventResponse);
+        Event e = new Event(CUSTOMER_ID_TO_ACCOUNT_NUMBER_REQUESTED, eventResponse);
         messageService.handleCustomerIdToAccountNumberRequest(e);
     }
 
     @Then("the customer accountNumber is placed back on the queue")
     public void theCustomerAccountNumberIsPlacedBackOnTheQueue() {
         EventResponse eventResponse = new EventResponse(sessionId, true, null, accountID);
-        Event e = new Event("CustomerIdToAccountNumberResponse." + sessionId, eventResponse);
-        assertEquals(mq.getEvent("CustomerIdToAccountNumberResponse." + sessionId), e);
+        Event e = new Event(CUSTOMER_TO_ACCOUNT_NUMBER_RESPONDED + sessionId, eventResponse);
+        assertEquals(mq.getEvent(CUSTOMER_TO_ACCOUNT_NUMBER_RESPONDED + sessionId), e);
 //        verify(mq).publish(e);
     }
 
     @Then("The merchant errormessage {string} is placed back on the queue")
     public void theMerchantErrormessageIsPlacedBackOnTheQueue(String errorMessage) {
         EventResponse eventResponse = new EventResponse(sessionId, false, errorMessage);
-        Event e = new Event("MerchantIdToAccountNumberResponse." + sessionId, eventResponse);
-        assertEquals(mq.getEvent("MerchantIdToAccountNumberResponse." + sessionId), e);
+        Event e = new Event(MERCHANT_TO_ACCOUNT_NUMBER_RESPONDED + sessionId, eventResponse);
+        assertEquals(mq.getEvent(MERCHANT_TO_ACCOUNT_NUMBER_RESPONDED + sessionId), e);
 //        verify(mq).publish(e);
     }
 
     @Then("The customer errormessage {string} is placed back on the queue")
     public void theCustomerErrormessageIsPlacedBackOnTheQueue(String errorMessage) {
         EventResponse eventResponse = new EventResponse(sessionId, false, errorMessage);
-        Event e = new Event("CustomerIdToAccountNumberResponse." + sessionId, eventResponse);
-        assertEquals(mq.getEvent("CustomerIdToAccountNumberResponse." + sessionId), e);
+        Event e = new Event(CUSTOMER_TO_ACCOUNT_NUMBER_RESPONDED + sessionId, eventResponse);
+        assertEquals(mq.getEvent(CUSTOMER_TO_ACCOUNT_NUMBER_RESPONDED + sessionId), e);
 //        verify(mq).publish(e);
     }
 }
