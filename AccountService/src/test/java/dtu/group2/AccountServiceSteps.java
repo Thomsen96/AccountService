@@ -56,6 +56,7 @@ public class AccountServiceSteps {
         this.balance = balance;
         try {
             this.accountID = bank.createAccountWithBalance(user, new BigDecimal(balance));
+            System.out.println("Temporary bank account has been created with account number: " + accountID);
         } catch (Exception e) {
             exception = e;
         }
@@ -64,23 +65,25 @@ public class AccountServiceSteps {
     @When("a customer tries to create an account")
     public void aCustomerTriesToCreateAnAccount() throws BankServiceException_Exception {
         this.userId = accountService.createCustomer(accountID);
+        System.out.println("User has been created with userId: " + userId);
     }
 
     @When("a merchant tries to create an account")
     public void aMerchantTriesToCreateAnAccount() throws BankServiceException_Exception {
         this.userId = accountService.createMerchant(accountID);
+        System.out.println("User has been created with userId: " + userId);
     }
 
     @Then("a customer account exists with that accountID")
     public void aCustomerAccountExistsWithThatAccountID() {
         assertNotNull(accountService.getCustomer(userId));
-        assertEquals(accountService.getCustomerId(userId), accountID);
+        assertEquals(accountService.getCustomerBankAccountId(userId), accountID);
     }
 
     @Then("a merchant account exists with that accountID")
     public void aMerchantAccountExistsWithThatAccountID() {
         assertNotNull(accountService.getMerchant(userId));
-        assertEquals(accountService.getMerchantId(userId), accountID);
+        assertEquals(accountService.getMerchantBankAccountId(userId), accountID);
     }
 
     @Given("a user with no first name, last name or cpr number")
@@ -169,7 +172,7 @@ public class AccountServiceSteps {
     @Then("a uid is received and merchant returned")
     public void aUidIsReceivedAndMerchantReturned() {
         assertNotNull(accountService.getMerchant(userId));
-        assertEquals(accountService.getMerchantId(userId), accountID);
+        assertEquals(accountService.getMerchantBankAccountId(userId), accountID);
     }
 
     @When("the account service is requested for its status")

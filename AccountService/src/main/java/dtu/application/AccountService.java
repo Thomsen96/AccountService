@@ -22,21 +22,21 @@ public class AccountService {
 		return merchants.create(bank.getAccount(id));
 	}
 
-	public Account getCustomer(String accountId) {
-		return customers.getAccount(accountId);
+	public Account getCustomer(String customerId) {
+		return customers.getAccount(customerId);
 	}
 
-	public Account getMerchant(String accountId) {
-		return merchants.getAccount(accountId);
+	public Account getMerchant(String merchantId) {
+		return merchants.getAccount(merchantId);
 	}
 
-	public String getCustomerId(String customerId) {
+	public String getCustomerBankAccountId(String customerId) {
 		Account customerAccount = customers.getAccount(customerId);
 		if(customerAccount != null) return customerAccount.getId();
 		else return null;
 	}
 
-	public String getMerchantId(String merchantId) {
+	public String getMerchantBankAccountId(String merchantId) {
 		Account merchantAccount = merchants.getAccount(merchantId);
 		if(merchantAccount != null) return merchantAccount.getId();
 		else return null;

@@ -45,11 +45,14 @@ public class AccountEventHandler {
         String sessionId = res.getSessionId();
         String accountNumber = res.getArgument(0, String.class);
         String userId = "";
-        try { 
+        System.out.println("Handling createCustomerAccountRequest with accountNumber: " + accountNumber);
+        try {
         	userId = accountService.createCustomer(accountNumber);
+        	System.out.println("Customer created with userId " + userId);
         } catch (Exception e) { e.printStackTrace(); }
         EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
         if(accountService.getCustomer(userId) == null) {
+        	System.out.println("The customer with id " + userId + " was not created properly");
             eventResponse = new EventResponse(sessionId, false, "AN ERROR HAS OCCURED - COULD NOT CREATE CUSTOMER");
         }
         Event response = new Event("CustomerCreationResponse." + sessionId, eventResponse);
@@ -63,9 +66,11 @@ public class AccountEventHandler {
         String userId = "";
         try{ 
         	userId = accountService.createMerchant(accountNumber);
+        	System.out.println("Merchant created with userId " + userId);
         } catch (Exception e) { e.printStackTrace(); }
         EventResponse eventResponse = new EventResponse(sessionId, true, null, userId);
         if(accountService.getMerchant(userId) == null) {
+        	System.out.println("The merchant with id " + userId + " was not created properly");
             eventResponse = new EventResponse(sessionId, false, "AN ERROR HAS OCCURED - COULD NOT CREATE MERCHANT");
         }
         Event response = new Event("MerchantCreationResponse." + sessionId, eventResponse);
@@ -127,7 +132,7 @@ public class AccountEventHandler {
         var res = event.getArgument(0, EventResponse.class);
         String sessionId = res.getSessionId();
         String id = res.getArgument(0, String.class);
-        String merchantAccountId = accountService.getMerchantId(id);
+        String merchantAccountId = accountService.getMerchantBankAccountId(id);
         EventResponse eventResponse = new EventResponse(sessionId, true, null, merchantAccountId);
         if(merchantAccountId == null){
             eventResponse = new EventResponse(sessionId, false, "No merchant exists with the provided id");
@@ -140,7 +145,7 @@ public class AccountEventHandler {
         var res = event.getArgument(0, EventResponse.class);
         String sessionId = res.getSessionId();
         String id = res.getArgument(0, String.class);
-        String customerAccountId = accountService.getCustomerId(id);
+        String customerAccountId = accountService.getCustomerBankAccountId(id);
         EventResponse eventResponse = new EventResponse(sessionId, true, null, customerAccountId);
         if(customerAccountId == null){
             eventResponse = new EventResponse(sessionId, false, "No customer exists with the provided id");
