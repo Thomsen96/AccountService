@@ -6,6 +6,11 @@ import messaging.Event;
 import messaging.EventResponse;
 import messaging.MessageQueue;
 
+import static messaging.GLOBAL_STRINGS.ACCOUNT_SERVICE.HANDLE.*;
+import static messaging.GLOBAL_STRINGS.ACCOUNT_SERVICE.PUBLISH.*;
+import static messaging.GLOBAL_STRINGS.TOKEN_SERVICE.PUBLISH.CUSTOMER_RESPONDED;
+import static messaging.GLOBAL_STRINGS.TOKEN_SERVICE.PUBLISH.CUSTOMER_VERIFICATION_RESPONDED;
+
 public class AccountEventHandler {
 	
     private MessageQueue messageQueue;
@@ -16,19 +21,19 @@ public class AccountEventHandler {
         this.messageQueue = messageQueue;
         this.accountService = as;
 
-        this.messageQueue.addHandler("AccountStatusRequest", this::handleAccountStatusRequest);
+        this.messageQueue.addHandler(ACCOUNT_STATUS_REQUESTED, this::handleAccountStatusRequest);
 
-        this.messageQueue.addHandler("GetCustomer", this::handleGetCustomer);
-        this.messageQueue.addHandler("GetMerchant", this::handleGetMerchant);
+        this.messageQueue.addHandler(GET_CUSTOMER, this::handleGetCustomer);
+        this.messageQueue.addHandler(GET_MERCHANT, this::handleGetMerchant);
 
-        this.messageQueue.addHandler("CustomerVerificationRequest", this::handleCustomerVerificationRequest);
-        this.messageQueue.addHandler("MerchantVerificationRequest", this::handleMerchantVerificationRequest);
+        this.messageQueue.addHandler(CUSTOMER_VERIFICATION_REQUESTED, this::handleCustomerVerificationRequest);
+        this.messageQueue.addHandler(MERCHANT_VERIFICATION_REQUESTED, this::handleMerchantVerificationRequest);
 
-        this.messageQueue.addHandler("CustomerCreationRequest", this::createCustomerAccountRequest);
-        this.messageQueue.addHandler("MerchantCreationRequest", this::createMerchantAccountRequest);
+        this.messageQueue.addHandler(CUSTOMER_CREATION_REQUESTED, this::createCustomerAccountRequest);
+        this.messageQueue.addHandler(MERCHANT_CREATION_REQUESTED, this::createMerchantAccountRequest);
 
-        this.messageQueue.addHandler("MerchantIdToAccountNumberRequest", this::handleMerchantIdToAccountNumberRequest);
-        this.messageQueue.addHandler("CustomerIdToAccountNumberRequest", this::handleCustomerIdToAccountNumberRequest);
+        this.messageQueue.addHandler(MERCHANT_ID_TO_ACCOUNT_NUMBER_REQUESTED, this::handleMerchantIdToAccountNumberRequest);
+        this.messageQueue.addHandler(CUSTOMER_ID_TO_ACCOUNT_NUMBER_REQUESTED, this::handleCustomerIdToAccountNumberRequest);
     }
 
     public void handleAccountStatusRequest(Event e) {
@@ -36,7 +41,7 @@ public class AccountEventHandler {
         var eventRes = e.getArgument(0, EventResponse.class);
         String sessionId = eventRes.getSessionId();
         EventResponse eventResponse = new EventResponse(sessionId, true, null, accountService.getStatus());
-        Event event = new Event("AccountStatusResponse." + sessionId, eventResponse);
+        Event event = new Event(ACCOUNT_STATUS_RESPONDED + sessionId, eventResponse);
         messageQueue.publish(event);
     }
 
@@ -55,7 +60,7 @@ public class AccountEventHandler {
         	System.out.println("The customer with id " + userId + " was not created properly");
             eventResponse = new EventResponse(sessionId, false, "AN ERROR HAS OCCURED - COULD NOT CREATE CUSTOMER");
         }
-        Event response = new Event("CustomerCreationResponse." + sessionId, eventResponse);
+        Event response = new Event(CUSTOMER_CREATION_RESPONDED + sessionId, eventResponse);
         messageQueue.publish(response);
     }
 
@@ -73,7 +78,7 @@ public class AccountEventHandler {
         	System.out.println("The merchant with id " + userId + " was not created properly");
             eventResponse = new EventResponse(sessionId, false, "AN ERROR HAS OCCURED - COULD NOT CREATE MERCHANT");
         }
-        Event response = new Event("MerchantCreationResponse." + sessionId, eventResponse);
+        Event response = new Event(MERCHANT_CREATION_RESPONDED + sessionId, eventResponse);
         messageQueue.publish(response);
     }
 
@@ -85,7 +90,7 @@ public class AccountEventHandler {
         if(accountService.verifyCustomer(id)){
             eventResponse = new EventResponse(sessionId, true, null);
         }
-        Event response = new Event("CustomerVerificationResponse." + sessionId, eventResponse );
+        Event response = new Event(CUSTOMER_VERIFICATION_RESPONDED + sessionId, eventResponse );
         messageQueue.publish(response);
     }
 
@@ -97,7 +102,7 @@ public class AccountEventHandler {
         if(accountService.verifyMerchant(id)){
             eventResponse = new EventResponse(sessionId, true, null);
         }
-        Event response = new Event("MerchantVerificationResponse." + sessionId, eventResponse );
+        Event response = new Event(MERCHANT_VERIFICATION_RESPONDED + sessionId, eventResponse );
         messageQueue.publish(response);
     }
 
@@ -110,7 +115,7 @@ public class AccountEventHandler {
         if(customer != null){
             eventResponse = new EventResponse(sessionId, true, null, customer);
         }
-        Event event = new Event("ResponseCustomer." + sessionId, eventResponse);
+        Event event = new Event(CUSTOMER_RESPONDED + sessionId, eventResponse);
         System.out.println("handler: " + event.getArgument(0, EventResponse.class));
         messageQueue.publish(event);
     }
@@ -124,7 +129,7 @@ public class AccountEventHandler {
         if(merchant != null){
             eventResponse = new EventResponse(sessionId, true, null, merchant);
         }
-        Event event = new Event("ResponseMerchant."+sessionId, eventResponse);
+        Event event = new Event(MERCHANT_RESPONDED+sessionId, eventResponse);
         messageQueue.publish(event);
     }
 
@@ -137,7 +142,7 @@ public class AccountEventHandler {
         if(merchantAccountId == null){
             eventResponse = new EventResponse(sessionId, false, "No merchant exists with the provided id");
         }
-        Event response = new Event("MerchantIdToAccountNumberResponse." + sessionId, eventResponse);
+        Event response = new Event(MERCHANT_TO_ACCOUNT_NUMBER_RESPONDED + sessionId, eventResponse);
         messageQueue.publish(response);
     }
 
@@ -150,7 +155,7 @@ public class AccountEventHandler {
         if(customerAccountId == null){
             eventResponse = new EventResponse(sessionId, false, "No customer exists with the provided id");
         }
-        Event response = new Event("CustomerIdToAccountNumberResponse." + sessionId, eventResponse);
+        Event response = new Event(CUSTOMER_TO_ACCOUNT_NUMBER_RESPONDED + sessionId, eventResponse);
         messageQueue.publish(response);
     }
 }
