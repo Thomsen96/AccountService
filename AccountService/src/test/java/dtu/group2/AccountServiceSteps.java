@@ -28,7 +28,7 @@ public class AccountServiceSteps {
 
     User user;
     String balance;
-    String accountID;
+    public String accountID;
     String userId;
     Exception exception;
     String status;
