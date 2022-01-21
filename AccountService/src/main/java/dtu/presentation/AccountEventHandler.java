@@ -1,7 +1,6 @@
 package dtu.presentation;
 
 import dtu.application.AccountService;
-import dtu.domain.DTO;
 import dtu.ws.fastmoney.Account;
 import messaging.Event;
 import messaging.EventResponse;
@@ -50,7 +49,7 @@ public class AccountEventHandler {
         System.out.println("Creating customer in DTU Pay");
         var res = event.getArgument(0, EventResponse.class);
         String sessionId = res.getSessionId();
-        String accountNumber = res.getArgument(0, DTO.CreateAccount.class).accountId;
+        String accountNumber = res.getArgument(0, String.class);
         String userId = null;
         System.out.println("Handling createCustomerAccountRequest with accountNumber: " + accountNumber);
         try {
