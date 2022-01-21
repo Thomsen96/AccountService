@@ -83,17 +83,7 @@ public class AccountEventHandler {
         messageQueue.publish(response);
     }
 
-    public void handleCustomerVerificationRequest(Event event)  {
-        var res = event.getArgument(0, EventResponse.class);
-        String sessionId = res.getSessionId();
-        String id = res.getArgument(0, String.class);
-        EventResponse eventResponse = new EventResponse(sessionId, false, "Customer is not verified");
-        if(accountService.verifyCustomer(id)){
-            eventResponse = new EventResponse(sessionId, true, null);
-        }
-        Event response = new Event(CUSTOMER_VERIFICATION_RESPONDED + sessionId, eventResponse );
-        messageQueue.publish(response);
-    }
+
 
     public void handleMerchantVerificationRequest(Event event) {
         var res = event.getArgument(0, EventResponse.class);
@@ -133,12 +123,26 @@ public class AccountEventHandler {
         Event event = new Event(MERCHANT_RESPONDED+sessionId, eventResponse);
         messageQueue.publish(event);
     }
+    
+    public void handleCustomerVerificationRequest(Event event)  {
+        var res = event.getArgument(0, EventResponse.class);
+        String sessionId = res.getSessionId();
+        String id = res.getArgument(0, String.class);
+        EventResponse eventResponse = new EventResponse(sessionId, false, "Customer is not verified");
+        if(accountService.verifyCustomer(id)){
+            eventResponse = new EventResponse(sessionId, true, null);
+        }
+        Event response = new Event(CUSTOMER_VERIFICATION_RESPONDED + sessionId, eventResponse );
+        messageQueue.publish(response);
+    }
 
     public void handleMerchantIdToAccountNumberRequest(Event event) {
         var res = event.getArgument(0, EventResponse.class);
         String sessionId = res.getSessionId();
         String id = res.getArgument(0, String.class);
+        System.out.println("Incoming merchantId: " + id);
         String merchantAccountId = accountService.getMerchantBankAccountId(id);
+        System.out.println("merchantAccountId: " + merchantAccountId);
         EventResponse eventResponse = new EventResponse(sessionId, true, null, merchantAccountId);
         if(merchantAccountId == null){
             eventResponse = new EventResponse(sessionId, false, "No merchant exists with the provided id");
@@ -151,7 +155,9 @@ public class AccountEventHandler {
         var res = event.getArgument(0, EventResponse.class);
         String sessionId = res.getSessionId();
         String id = res.getArgument(0, String.class);
+        System.out.println("Incoming customerId: " + id);
         String customerAccountId = accountService.getCustomerBankAccountId(id);
+        System.out.println("customerAccountId: " + customerAccountId);
         EventResponse eventResponse = new EventResponse(sessionId, true, null, customerAccountId);
         if(customerAccountId == null){
             eventResponse = new EventResponse(sessionId, false, "No customer exists with the provided id");

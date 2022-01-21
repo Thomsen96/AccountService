@@ -9,32 +9,33 @@ import java.util.UUID;
 
 public class AccountRepository implements IAccountRepository {
 
-    private static final HashMap<String, Account> customers = new HashMap<>();
+    private static final HashMap<String, Account> users = new HashMap<>();
 
     @Override
     public Account getAccount(String id) {
-        return customers.get(id);
+    	System.out.println("Checking if id is in the hashmap: " + id);
+        return users.get(id);
     }
 
     @Override
     public void delete(String id) {
-        customers.remove(id);
+        users.remove(id);
     }
 
     @Override
     public String create(Account account) {
         String uuid = UUID.randomUUID().toString();
-        customers.put(uuid, account);
+        users.put(uuid, account);
         return uuid;
     }
 
     @Override
     public Boolean verify(String id) {
-        return customers.containsKey(id);
+        return users.containsKey(id);
     }
 
     @Override
     public Collection<Account> getAll() {
-        return customers.values();
+        return users.values();
     }
 }
