@@ -12,3 +12,4 @@ Each of the steps in this file is also described in the Jenkins file. Where the 
 
 - `./build.sh`
 - `./deploy.sh`
+ 
