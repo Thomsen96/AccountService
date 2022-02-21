@@ -6,7 +6,7 @@ pipeline {
             steps {
                 timeout(time: 69, unit: 'SECONDS') {
                     sh "chmod +x -R ${env.WORKSPACE}"
-                    sh './build.sh'
+                    sh './completeBuild.sh'
                 }
             }
         }
